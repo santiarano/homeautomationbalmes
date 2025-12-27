@@ -774,48 +774,47 @@ body, html {
 }
 
 /* ============================================
-   MUSIC PLAYER (FOOTER BAR) - New Layout
+   MUSIC PLAYER (FOOTER BAR) - Sonos Style
    ============================================ */
 .music-player {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100vw;
-    background: linear-gradient(to top, rgba(30,30,35,0.98) 0%, rgba(30,30,35,0.95) 60%, rgba(30,30,35,0.85) 80%, rgba(20,20,25,0.7) 100%);
+    background: linear-gradient(to top, rgba(35,35,42,0.98) 0%, rgba(35,35,42,0.95) 70%, rgba(30,30,38,0.9) 100%);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
-    padding: clamp(16px, 2.5vh, 32px) 5vw clamp(16px, 2.5vh, 28px);
+    padding: clamp(14px, 2vh, 24px) clamp(20px, 3vw, 40px) clamp(12px, 1.8vh, 20px);
     display: flex;
     flex-direction: column;
-    gap: clamp(12px, 1.8vh, 20px);
+    gap: clamp(8px, 1.2vh, 14px);
     z-index: 100;
-    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .player-content {
     display: flex;
     flex-direction: column;
-    gap: clamp(14px, 2vh, 24px);
+    gap: clamp(10px, 1.5vh, 16px);
     width: 100%;
 }
 
 /* Top Row: Album + Info + Controls */
 .player-top-row {
     display: flex;
-    align-items: center;
-    gap: clamp(16px, 2.5vw, 32px);
+    align-items: flex-start;
+    gap: clamp(14px, 2vw, 24px);
     width: 100%;
 }
 
-/* Mini Album Art */
+/* Mini Album Art - Bigger */
 .mini-album-art {
-    width: clamp(90px, 12vw, 140px);
-    height: clamp(90px, 12vw, 140px);
-    border-radius: clamp(6px, 1vw, 12px);
+    width: clamp(80px, 11vw, 130px);
+    height: clamp(80px, 11vw, 130px);
+    border-radius: clamp(8px, 1.2vw, 14px);
     overflow: hidden;
-    background: #1a1a1a;
+    background: #2a2a32;
     flex-shrink: 0;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 
 .mini-album-art img {
@@ -836,17 +835,17 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(28px, 4vw, 44px);
-    color: rgba(255,255,255,0.2);
+    font-size: clamp(24px, 3.5vw, 40px);
+    color: rgba(255,255,255,0.25);
 }
 
-/* Right Section: Track Info + Controls */
+/* Right Section: All info and controls */
 .player-right-section {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     flex: 1;
-    gap: clamp(20px, 3vw, 40px);
+    min-width: 0;
+    gap: clamp(4px, 0.6vh, 8px);
 }
 
 .lyrics-line {
@@ -878,41 +877,50 @@ body, html {
 }
 
 
-/* Track Info */
+/* Track Info - Title on top row */
 .track-info {
     display: flex;
     flex-direction: column;
-    gap: clamp(4px, 0.6vh, 8px);
-    flex: 1;
     min-width: 0;
 }
 
 .track-title {
-    font-size: clamp(18px, 2.8vw, 38px);
+    font-size: clamp(16px, 2.4vw, 30px);
     font-weight: 500;
     color: white;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-bottom: clamp(2px, 0.4vh, 6px);
 }
 
+/* Details row: Album/Artist + Controls inline */
 .track-details {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(12px, 2vw, 24px);
+}
+
+.track-details-text {
+    display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
+    min-width: 0;
+    flex-shrink: 1;
 }
 
 .album-name {
-    font-size: clamp(14px, 2vw, 26px);
+    font-size: clamp(13px, 1.8vw, 22px);
     font-weight: 400;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.7);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .artist-name {
-    font-size: clamp(12px, 1.6vw, 22px);
+    font-size: clamp(11px, 1.5vw, 18px);
     font-weight: 300;
     color: rgba(255,255,255,0.5);
     white-space: nowrap;
@@ -920,11 +928,11 @@ body, html {
     text-overflow: ellipsis;
 }
 
-/* Playback Controls - inline */
+/* Playback Controls - inline with details */
 .playback-controls {
     display: flex; 
     align-items: center;
-    gap: clamp(8px, 1.5vw, 20px);
+    gap: clamp(6px, 1.2vw, 16px);
     flex-shrink: 0;
 }
 
@@ -939,29 +947,30 @@ body, html {
 }
 
 .control-btn svg {
-    width: clamp(22px, 3vw, 38px);
-    height: clamp(22px, 3vw, 38px);
+    width: clamp(18px, 2.4vw, 30px);
+    height: clamp(18px, 2.4vw, 30px);
 }
 
 .control-btn:hover { opacity: 1; transform: scale(1.1); }
 
 .play-pause-btn {
-    width: clamp(50px, 7vw, 80px);
-    height: clamp(50px, 7vw, 80px);
-    background: rgba(255,255,255,0.95);
+    width: clamp(40px, 5.5vw, 64px);
+    height: clamp(40px, 5.5vw, 64px);
+    background: rgba(255,255,255,0.9);
     border-radius: 50%;
     color: #1a1a1a !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25);
     opacity: 1;
+    margin: 0 clamp(4px, 0.8vw, 10px);
 }
 
 .play-pause-btn svg {
-    width: clamp(20px, 2.8vw, 32px);
-    height: clamp(20px, 2.8vw, 32px);
+    width: clamp(16px, 2.2vw, 26px);
+    height: clamp(16px, 2.2vw, 26px);
 }
 
 .shuffle-btn, .repeat-btn {
-    opacity: 0.4;
+    opacity: 0.45;
     transition: all 0.2s;
 }
 
@@ -971,44 +980,48 @@ body, html {
 }
 
 .shuffle-btn svg, .repeat-btn svg {
-    width: clamp(18px, 2.4vw, 28px);
-    height: clamp(18px, 2.4vw, 28px);
+    width: clamp(16px, 2vw, 24px);
+    height: clamp(16px, 2vw, 24px);
 }
 
-/* Volume Slider Row */
+/* Volume Slider Row - Compact */
 .volume-slider-row {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 1.5vw, 20px);
+    gap: clamp(8px, 1.2vw, 14px);
     width: 100%;
-    padding: 0 clamp(5px, 1vw, 15px);
+    max-width: 100%;
+    padding: 0;
 }
 
 .volume-icon {
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.4);
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
 }
 
 .volume-icon svg {
-    width: clamp(18px, 2.5vw, 28px);
-    height: clamp(18px, 2.5vw, 28px);
+    width: clamp(14px, 1.8vw, 20px);
+    height: clamp(14px, 1.8vw, 20px);
 }
 
 .volume-slider-container {
     flex: 1;
     position: relative;
-    height: clamp(4px, 0.6vw, 8px);
+    height: clamp(3px, 0.5vw, 5px);
     background: rgba(255,255,255,0.2);
     border-radius: 10px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .volume-slider {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 0;
+    transform: translateY(-50%);
     width: 100%;
-    height: 100%;
+    height: clamp(20px, 3vw, 30px);
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
@@ -1019,22 +1032,22 @@ body, html {
 .volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: clamp(14px, 2vw, 22px);
-    height: clamp(14px, 2vw, 22px);
+    width: clamp(12px, 1.6vw, 18px);
+    height: clamp(12px, 1.6vw, 18px);
     background: white;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
 .volume-slider::-moz-range-thumb {
-    width: clamp(14px, 2vw, 22px);
-    height: clamp(14px, 2vw, 22px);
+    width: clamp(12px, 1.6vw, 18px);
+    height: clamp(12px, 1.6vw, 18px);
     background: white;
     border-radius: 50%;
     cursor: pointer;
     border: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
 .volume-slider-fill {
@@ -1042,7 +1055,7 @@ body, html {
     top: 0;
     left: 0;
     height: 100%;
-    background: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.5);
     border-radius: 10px;
     pointer-events: none;
     transition: width 0.1s ease;

@@ -160,38 +160,40 @@
                         <!-- Track Info -->
                         <div class="track-info">
                             <div class="track-title" id="song">Waiting for Sonos...</div>
+                            <!-- Details row: Album/Artist + Controls inline -->
                             <div class="track-details">
-                                <div class="album-name" id="album">Sunset Lounge</div>
-                                <div class="artist-name" id="artist">Connecting...</div>
-                            </div>
-                        </div>
-
-                        <!-- Playback Controls (inline) -->
-                        <div class="playback-controls">
-                            <div class="control-btn shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
-                                </svg>
-                            </div>
-                            <div class="control-btn" onclick="sonos('previous')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-                                </svg>
-                            </div>
-                            <div class="control-btn play-pause-btn" onclick="sonos('toggle')" id="play-btn">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M8 5v14l11-7z"/>
-                                </svg>
-                            </div>
-                            <div class="control-btn" onclick="sonos('next')">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/>
-                                </svg>
-                            </div>
-                            <div class="control-btn repeat-btn" id="repeat-btn" onclick="toggleRepeat()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/>
-                                </svg>
+                                <div class="track-details-text">
+                                    <div class="album-name" id="album">Sunset Lounge</div>
+                                    <div class="artist-name" id="artist">Connecting...</div>
+                                </div>
+                                <!-- Playback Controls (inline with text) -->
+                                <div class="playback-controls">
+                                    <div class="control-btn shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                                        </svg>
+                                    </div>
+                                    <div class="control-btn" onclick="sonos('previous')">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="control-btn play-pause-btn" onclick="sonos('toggle')" id="play-btn">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="control-btn" onclick="sonos('next')">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="control-btn repeat-btn" id="repeat-btn" onclick="toggleRepeat()">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
