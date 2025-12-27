@@ -728,7 +728,39 @@ async function updateMediaPlayer() {
             }
             document.getElementById('speaker-info').textContent = sourceName;
             
-            console.log(`Active source: ${activeMediaSource}, Title: ${title}, State: ${state}`);
+            // Detect TV mode (Apple TV or TV source on Sonos)
+            const isTVMode = activeMediaSource === APPLETV_ENTITY || 
+                             (title && title.toLowerCase().includes('tv')) ||
+                             (attrs.source && attrs.source.toLowerCase().includes('tv')) ||
+                             (attrs.media_content_type === 'tvshow');
+            
+            const musicPlayer = document.querySelector('.music-player');
+            const albumPlaceholder = document.getElementById('mini-album-placeholder');
+            
+            if (isTVMode) {
+                musicPlayer.classList.add('tv-mode');
+                // Show Apple TV logo - properly centered
+                albumPlaceholder.classList.add('tv-mode');
+                albumPlaceholder.innerHTML = `
+                    <svg viewBox="0 0 71 24" fill="currentColor" style="width: 70%; height: auto;">
+                        <!-- Apple logo -->
+                        <path d="M16.104 3.168c-.864-1.08-2.088-1.704-3.384-1.704-.216 0-.432.024-.648.048.144 1.2.528 2.28 1.2 3.24.84 1.104 2.016 1.8 3.288 1.848.072-1.2-.312-2.4-1.032-3.432h.576zm.6 4.368c-1.848-.072-3.456 1.032-4.344 1.032-.912 0-2.28-.984-3.768-.96-1.944.024-3.768 1.128-4.752 2.856-2.04 3.528-.528 8.736 1.44 11.616.96 1.416 2.088 2.976 3.576 2.928 1.44-.048 1.992-.936 3.72-.936 1.752 0 2.256.936 3.768.912 1.56-.024 2.52-1.416 3.456-2.832.72-1.08 1.008-1.632 1.584-2.856-4.176-1.584-4.848-7.632-.72-9.936-1.176-1.512-2.856-2.4-4.008-1.824h.048z"/>
+                        <!-- t letter -->
+                        <path d="M36 4h3.5v3h4v3h-4v7c0 2 .8 2.8 2.5 2.8.6 0 1.2-.1 1.5-.2v3c-.6.2-1.4.3-2.2.3-3.6 0-5.3-2-5.3-5.5V10h-3V7h3V4z"/>
+                        <!-- v letter -->
+                        <path d="M47 7h3.8l4 13L59 7h3.8l-6 16h-3.6L47 7z"/>
+                    </svg>
+                `;
+                // Hide album image
+                const albumImg = document.getElementById('mini-album-img');
+                if (albumImg) albumImg.classList.remove('loaded');
+            } else {
+                musicPlayer.classList.remove('tv-mode');
+                albumPlaceholder.classList.remove('tv-mode');
+                albumPlaceholder.innerHTML = '🎵';
+            }
+            
+            console.log(`Active source: ${activeMediaSource}, Title: ${title}, State: ${state}, TV Mode: ${isTVMode}`);
         } else {
             document.getElementById('song').textContent = 'No Media';
             document.getElementById('album').textContent = '';
@@ -1124,9 +1156,9 @@ async function playPlaylist(playlist) {
     console.log('Playing playlist:', playlist.title);
     
     try {
-        // Update UI immediately
+        // Update UI immediately with animation
         currentPlayingPlaylistId = playlist.id;
-        updatePlaylistNowPlaying();
+        updatePlaylistNowPlaying(true);
         
         // Send play command to Sonos via HA
         const response = await fetch(`http://${HA_IP}/api/services/media_player/play_media`, {
@@ -1154,16 +1186,44 @@ async function playPlaylist(playlist) {
     }
 }
 
-// Update now playing indicator on tiles
-function updatePlaylistNowPlaying() {
-    const tiles = document.querySelectorAll('.playlist-tile');
+// Update now playing indicator on tiles and move to first position
+function updatePlaylistNowPlaying(animate = false) {
+    const carousel = document.getElementById('playlist-carousel');
+    if (!carousel) return;
+    
+    const tiles = Array.from(document.querySelectorAll('.playlist-tile'));
+    let nowPlayingTile = null;
+    
     tiles.forEach(tile => {
         if (tile.dataset.playlistId === currentPlayingPlaylistId) {
             tile.classList.add('now-playing');
+            nowPlayingTile = tile;
         } else {
             tile.classList.remove('now-playing');
         }
     });
+    
+    // Move now playing tile to first position
+    if (nowPlayingTile && nowPlayingTile !== tiles[0]) {
+        if (animate) {
+            // Add animation class
+            nowPlayingTile.classList.add('moving-to-first');
+            
+            // Move after a brief delay for visual effect
+            setTimeout(() => {
+                carousel.insertBefore(nowPlayingTile, carousel.firstChild);
+                carousel.scrollTo({ left: 0, behavior: 'smooth' });
+                
+                // Remove animation class after animation completes
+                setTimeout(() => {
+                    nowPlayingTile.classList.remove('moving-to-first');
+                }, 500);
+            }, 100);
+        } else {
+            // Move immediately without animation (for initial load)
+            carousel.insertBefore(nowPlayingTile, carousel.firstChild);
+        }
+    }
 }
 
 // Detect currently playing playlist from media player state
