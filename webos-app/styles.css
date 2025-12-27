@@ -548,6 +548,22 @@ body, html {
     filter: drop-shadow(0 0 18px rgba(255,255,255,0.08));
 }
 
+/* SVG icon styling */
+.btn-icon-svg {
+    width: clamp(64px, 11.2vw, 86.4px);
+    height: clamp(64px, 11.2vw, 86.4px);
+}
+
+.btn--gold .btn-icon-svg {
+    color: var(--gold);
+    filter: drop-shadow(0 0 18px rgba(230,190,138,0.4));
+}
+
+.btn--silver .btn-icon-svg {
+    color: rgba(255,255,255,0.85);
+    filter: drop-shadow(0 0 18px rgba(255,255,255,0.2));
+}
+
 .btn-label {
     font-size: 20px;
     letter-spacing: 0.16em;
@@ -617,7 +633,7 @@ body, html {
    ============================================ */
 .playlist-carousel-wrapper {
     position: fixed;
-    bottom: clamp(140px, 22vh, 260px);
+    bottom: clamp(200px, 30vh, 340px);
     left: 0;
     width: 100vw;
     height: clamp(160px, 26vw, 320px);
@@ -657,9 +673,9 @@ body, html {
     justify-content: flex-start;
     padding: clamp(12px, 1.8vw, 22px);
     padding-bottom: clamp(12px, 1.8vw, 22px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    /* Darker muted background - will be overridden by JS */
-    background-color: rgba(60, 60, 70, 0.85);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    /* More transparent background - will be overridden by JS */
+    background-color: rgba(60, 60, 70, 0.5);
 }
 
 .playlist-tile:hover {
@@ -686,6 +702,7 @@ body, html {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0.5;
 }
 
 /* Placeholder icon when no art */
@@ -793,13 +810,14 @@ body, html {
 
 /* Mini Album Art in player bar */
 .mini-album-art {
-    width: clamp(84px, 14vw, 140px);
-    height: clamp(84px, 14vw, 140px);
-    border-radius: clamp(8px, 1.4vw, 16px);
+    width: clamp(101px, 16.8vw, 168px);
+    height: clamp(101px, 16.8vw, 168px);
+    border-radius: clamp(10px, 1.7vw, 19px);
     overflow: hidden;
     background: #1a1a1a;
     flex-shrink: 0;
     box-shadow: 0 6px 28px rgba(0,0,0,0.6);
+    margin-top: 35px;
 }
 
 .mini-album-art img {
@@ -859,71 +877,76 @@ body, html {
     padding: 0;
 }
 
-/* Volume Circular Dial */
-.volume-dial-container {
+/* Left section: Album Art + Track Info */
+.player-left {
     display: flex;
     align-items: center;
-    gap: clamp(15px, 2vw, 30px);
+    gap: clamp(12px, 2vw, 24px);
+    flex: 1;
+    min-width: 0;
 }
 
-.volume-dial {
-    width: clamp(90px, 12vw, 160px);
-    height: clamp(90px, 12vw, 160px);
+/* Volume Bar (Right) - Sleek horizontal design */
+.volume-bar-container {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1.2vw, 16px);
+    padding-left: clamp(15px, 2vw, 30px);
+    margin-top: 55px;
+}
+
+.volume-icon {
+    width: clamp(22px, 3vw, 36px);
+    height: clamp(22px, 3vw, 36px);
+    color: rgba(255,255,255,0.6);
+    flex-shrink: 0;
+}
+
+.volume-slider-wrap {
     position: relative;
+    width: clamp(80px, 10vw, 140px);
+    height: clamp(28px, 4vw, 44px);
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 
-.volume-dial svg {
+.volume-track {
     position: absolute;
-    top: 0;
-    left: 0;
+    width: 100%;
+    height: clamp(4px, 0.6vw, 8px);
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.volume-fill {
+    height: 100%;
+    width: 60%;
+    background: linear-gradient(90deg, var(--gold), rgba(230, 190, 138, 0.8));
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(230, 190, 138, 0.5);
+    transition: width 0.15s ease;
+}
+
+.volume-input {
+    position: absolute;
     width: 100%;
     height: 100%;
-    transform: rotate(-90deg);
-}
-
-.volume-dial .bg-circle {
-    fill: none;
-    stroke: rgba(255,255,255,0.15);
-    stroke-width: 3.5;
-}
-
-.volume-dial .progress-circle {
-    fill: none;
-    stroke: var(--gold);
-    stroke-width: 3.5;
-    stroke-linecap: round;
-    stroke-dasharray: 226;
-    stroke-dashoffset: 226;
-    transition: stroke-dashoffset 0.3s ease;
-    filter: drop-shadow(0 0 8px var(--gold));
-}
-
-.volume-value {
-    font-size: clamp(22px, 3.5vw, 42px);
-    font-weight: 300;
-    color: white;
-    z-index: 1;
-}
-
-.vol-btn {
+    opacity: 0;
     cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.2s;
-    font-size: clamp(24px, 4vw, 48px);
-    width: clamp(30px, 5vw, 60px);
-    height: clamp(30px, 5vw, 60px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+    margin: 0;
+    -webkit-appearance: none;
 }
 
-.vol-btn:hover { opacity: 1; }
+.volume-percent {
+    font-size: clamp(14px, 2vw, 22px);
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    min-width: clamp(28px, 4vw, 44px);
+    text-align: right;
+}
 
-/* Track Title */
+/* Track Title - extends to right edge */
 .track-title {
     font-size: clamp(18px, 2.7vw, 39px);
     font-weight: 400;
@@ -931,7 +954,7 @@ body, html {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: calc(100% - clamp(200px, 30vw, 400px));
+    max-width: 90vw;
     margin-bottom: 0.3em;
 }
 
@@ -944,13 +967,13 @@ body, html {
     min-width: 0;
 }
 
-/* Middle Row Layout */
+/* Middle Row Layout: Left (album+info), Center (controls), Right (volume) */
 .player-middle-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    gap: clamp(15px, 2.5vw, 35px);
+    position: relative;
 }
 
 .album-name {
@@ -961,6 +984,7 @@ body, html {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: clamp(90px, 15vw, 210px);
 }
 
 .artist-name {
@@ -973,12 +997,18 @@ body, html {
     text-overflow: ellipsis;
 }
 
-/* Playback Controls (Right) */
+/* Playback Controls (Absolute Center - offset for play/pause alignment) */
 .playback-controls {
+    position: absolute;
+    left: 50%;
+    top: calc(50% + 30px);
+    /* Offset right to account for shuffle button + 20px extra, centering play/pause */
+    transform: translate(calc(-50% + 7% + 20px), -50%);
     display: flex; 
     align-items: center;
+    justify-content: center;
     gap: clamp(16px, 2.6vw, 40px);
-    padding-right: 0;
+    z-index: 10;
 }
 
 .control-btn {
@@ -1367,8 +1397,12 @@ body.layout-cinematic .play-pause-btn svg {
     height: clamp(28px, 4vw, 48px);
 }
 
-body.layout-cinematic .volume-dial-container {
+body.layout-cinematic .volume-bar-container {
     display: none;
+}
+
+body.layout-cinematic .player-left {
+    justify-content: center;
 }
 
 body.layout-cinematic .speaker-name {

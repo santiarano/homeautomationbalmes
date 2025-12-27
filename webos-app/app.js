@@ -704,15 +704,8 @@ async function updateMediaPlayer() {
             }
             
             const volumePercent = Math.round(volumeLevel * 100);
-            document.getElementById('volume').textContent = volumePercent;
-            
-            const ring = document.getElementById('volume-ring');
-            if (ring) {
-                const radius = 36;
-                const circumference = 2 * Math.PI * radius;
-                const offset = circumference - (volumeLevel * circumference);
-                ring.style.strokeDashoffset = offset;
-            }
+            // Update volume UI with new bar design
+            updateVolumeUI(volumeLevel);
             
             const isPlaying = state === 'playing';
             const playBtn = document.getElementById('play-btn');
@@ -752,7 +745,36 @@ async function updateMediaPlayer() {
 
 const updateSonos = updateMediaPlayer;
 
-// Adjust volume
+// Set volume directly (from slider)
+async function setVolume(percent) {
+    try {
+        let newVol = Math.min(100, Math.max(0, parseInt(percent))) / 100;
+
+        console.log(`Volume set to: ${Math.round(newVol * 100)}%`);
+
+        await fetch(`http://${HA_IP}/api/services/media_player/volume_set`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${TOKEN}`, 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ 
+                entity_id: SONOS_ENTITY,
+                volume_level: newVol
+            })
+        });
+        
+        updateVolumeUI(newVol);
+        
+        if (sonosState && sonosState.attributes) {
+            sonosState.attributes.volume_level = newVol;
+        }
+    } catch (e) {
+        console.error("Volume set failed:", e);
+    }
+}
+
+// Adjust volume (increment/decrement)
 async function adjustVolume(delta) {
     try {
         let currentVol = sonosState?.attributes?.volume_level || 0;
@@ -772,19 +794,36 @@ async function adjustVolume(delta) {
             })
         });
         
-        document.getElementById('volume').textContent = Math.round(newVol * 100);
-        const ring = document.getElementById('volume-ring');
-        if (ring) {
-            const radius = 36;
-            const circumference = 2 * Math.PI * radius;
-            ring.style.strokeDashoffset = circumference - (newVol * circumference);
-        }
+        updateVolumeUI(newVol);
         
         if (sonosState && sonosState.attributes) {
             sonosState.attributes.volume_level = newVol;
         }
     } catch (e) {
         console.error("Volume adjust failed:", e);
+    }
+}
+
+// Update volume UI elements
+function updateVolumeUI(volumeLevel) {
+    const volumePercent = Math.round(volumeLevel * 100);
+    
+    // Update text display
+    const volumeText = document.getElementById('volume');
+    if (volumeText) {
+        volumeText.textContent = volumePercent;
+    }
+    
+    // Update fill bar
+    const volumeFill = document.getElementById('volume-fill');
+    if (volumeFill) {
+        volumeFill.style.width = `${volumePercent}%`;
+    }
+    
+    // Update slider input
+    const volumeInput = document.getElementById('volume-input');
+    if (volumeInput) {
+        volumeInput.value = volumePercent;
     }
 }
 
@@ -913,7 +952,7 @@ function generatePastelFromString(str) {
     const saturation = 25 + (Math.abs(hash >> 8) % 25); // 25-50% (muted)
     const lightness = 25 + (Math.abs(hash >> 16) % 15);  // 25-40% (dark range)
     
-    return `hsla(${hue}, ${saturation}%, ${lightness}%, 0.85)`;
+    return `hsla(${hue}, ${saturation}%, ${lightness}%, 0.5)`;
 }
 
 // Extract dominant color from an image (with fallback to string-based color)
@@ -1022,7 +1061,7 @@ function toPastel(r, g, b) {
     const mutedG = Math.round(g * (1 - darkMix) + targetDark * darkMix);
     const mutedB = Math.round(b * (1 - darkMix) + targetDark * darkMix);
     
-    return `rgba(${mutedR}, ${mutedG}, ${mutedB}, 0.85)`;
+    return `rgba(${mutedR}, ${mutedG}, ${mutedB}, 0.5)`;
 }
 
 // Render playlist carousel
