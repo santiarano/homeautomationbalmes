@@ -898,7 +898,7 @@ async function fetchSpotifyPlaylists() {
     }
 }
 
-// Generate a consistent pastel color based on a string (title)
+// Generate a consistent dark muted color based on a string (title)
 function generatePastelFromString(str) {
     // Simple hash function
     let hash = 0;
@@ -908,12 +908,12 @@ function generatePastelFromString(str) {
         hash = hash & hash; // Convert to 32bit integer
     }
     
-    // Use hash to generate HSL color
+    // Use hash to generate HSL color - darker, more muted
     const hue = Math.abs(hash) % 360;
-    const saturation = 50 + (Math.abs(hash >> 8) % 30); // 50-80%
-    const lightness = 75 + (Math.abs(hash >> 16) % 15);  // 75-90% (pastel range)
+    const saturation = 25 + (Math.abs(hash >> 8) % 25); // 25-50% (muted)
+    const lightness = 25 + (Math.abs(hash >> 16) % 15);  // 25-40% (dark range)
     
-    return `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`;
+    return `hsla(${hue}, ${saturation}%, ${lightness}%, 0.85)`;
 }
 
 // Extract dominant color from an image (with fallback to string-based color)
@@ -1011,14 +1011,18 @@ function extractDominantColor(imageUrl, title = '') {
     });
 }
 
-// Convert RGB to pastel version with transparency
+// Convert RGB to darker muted version with transparency
 function toPastel(r, g, b) {
-    // Mix with white to create pastel
-    const mix = 0.55; // 55% white mix for softer pastels
-    const pastelR = Math.round(r + (255 - r) * mix);
-    const pastelG = Math.round(g + (255 - g) * mix);
-    const pastelB = Math.round(b + (255 - b) * mix);
-    return `rgba(${pastelR}, ${pastelG}, ${pastelB}, 0.9)`;
+    // Darken and desaturate for muted dark tones
+    // Mix with dark gray to create muted dark color
+    const darkMix = 0.6; // 60% dark mix
+    const targetDark = 40; // Target dark value
+    
+    const mutedR = Math.round(r * (1 - darkMix) + targetDark * darkMix);
+    const mutedG = Math.round(g * (1 - darkMix) + targetDark * darkMix);
+    const mutedB = Math.round(b * (1 - darkMix) + targetDark * darkMix);
+    
+    return `rgba(${mutedR}, ${mutedG}, ${mutedB}, 0.85)`;
 }
 
 // Render playlist carousel
