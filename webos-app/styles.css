@@ -774,33 +774,48 @@ body, html {
 }
 
 /* ============================================
-   MUSIC PLAYER (FOOTER BAR)
+   MUSIC PLAYER (FOOTER BAR) - New Layout
    ============================================ */
 .music-player {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100vw;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 80%, transparent 100%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: clamp(12px, 1.8vh, 24px) 5vw clamp(20px, 3vh, 40px);
+    background: linear-gradient(to top, rgba(30,30,35,0.98) 0%, rgba(30,30,35,0.95) 60%, rgba(30,30,35,0.85) 80%, rgba(20,20,25,0.7) 100%);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    padding: clamp(16px, 2.5vh, 32px) 5vw clamp(16px, 2.5vh, 28px);
     display: flex;
     flex-direction: column;
-    gap: 0.8vh;
+    gap: clamp(12px, 1.8vh, 20px);
     z-index: 100;
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
-/* Mini Album Art in player bar - 40% larger */
+.player-content {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2vh, 24px);
+    width: 100%;
+}
+
+/* Top Row: Album + Info + Controls */
+.player-top-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2.5vw, 32px);
+    width: 100%;
+}
+
+/* Mini Album Art */
 .mini-album-art {
-    width: clamp(84px, 14vw, 140px);
-    height: clamp(84px, 14vw, 140px);
-    border-radius: clamp(8px, 1.4vw, 16px);
+    width: clamp(90px, 12vw, 140px);
+    height: clamp(90px, 12vw, 140px);
+    border-radius: clamp(6px, 1vw, 12px);
     overflow: hidden;
     background: #1a1a1a;
     flex-shrink: 0;
-    box-shadow: 0 6px 28px rgba(0,0,0,0.6);
-    align-self: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 .mini-album-art img {
@@ -821,8 +836,17 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(28px, 5.6vw, 50px);
+    font-size: clamp(28px, 4vw, 44px);
     color: rgba(255,255,255,0.2);
+}
+
+/* Right Section: Track Info + Controls */
+.player-right-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    gap: clamp(20px, 3vw, 40px);
 }
 
 .lyrics-line {
@@ -853,142 +877,60 @@ body, html {
     opacity: 0;
 }
 
-.player-content {
+
+/* Track Info */
+.track-info {
     display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 0;
+    flex-direction: column;
+    gap: clamp(4px, 0.6vh, 8px);
+    flex: 1;
+    min-width: 0;
 }
 
-/* Volume Circular Dial */
-.volume-dial-container {
-    display: flex;
-    align-items: center;
-    gap: clamp(15px, 2vw, 30px);
-    align-self: center;
-}
-
-.volume-dial {
-    width: clamp(90px, 12vw, 160px);
-    height: clamp(90px, 12vw, 160px);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.volume-dial svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-}
-
-.volume-dial .bg-circle {
-    fill: none;
-    stroke: rgba(255,255,255,0.15);
-    stroke-width: 3.5;
-}
-
-.volume-dial .progress-circle {
-    fill: none;
-    stroke: var(--gold);
-    stroke-width: 3.5;
-    stroke-linecap: round;
-    stroke-dasharray: 226;
-    stroke-dashoffset: 226;
-    transition: stroke-dashoffset 0.3s ease;
-    filter: drop-shadow(0 0 8px var(--gold));
-}
-
-.volume-value {
-    font-size: clamp(22px, 3.5vw, 42px);
-    font-weight: 300;
-    color: white;
-    z-index: 1;
-}
-
-.vol-btn {
-    cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.2s;
-    font-size: clamp(24px, 4vw, 48px);
-    width: clamp(30px, 5vw, 60px);
-    height: clamp(30px, 5vw, 60px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.vol-btn:hover { opacity: 1; }
-
-/* Track Title - 20% larger */
 .track-title {
-    font-size: clamp(22px, 3.2vw, 47px);
-    font-weight: 400;
+    font-size: clamp(18px, 2.8vw, 38px);
+    font-weight: 500;
     color: white;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: calc(100% - clamp(200px, 30vw, 400px));
-    margin-bottom: 0.3em;
 }
 
-/* Track Info (Center) - aligned to top */
-.track-info {
+.track-details {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    flex: 1;
-    min-width: 0;
-    align-self: flex-start;
-    padding-top: 0;
-}
-
-/* Middle Row Layout */
-.player-middle-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    width: 100%;
-    gap: clamp(15px, 2.5vw, 35px);
 }
 
 .album-name {
-    font-size: clamp(14px, 2.2vw, 32px);
+    font-size: clamp(14px, 2vw, 26px);
     font-weight: 400;
-    color: white;
-    opacity: 0.7;
+    color: rgba(255,255,255,0.75);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .artist-name {
-    font-size: clamp(12px, 1.8vw, 26px);
+    font-size: clamp(12px, 1.6vw, 22px);
     font-weight: 300;
-    opacity: 0.5;
-    color: white;
+    color: rgba(255,255,255,0.5);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Playback Controls (Right) */
+/* Playback Controls - inline */
 .playback-controls {
     display: flex; 
     align-items: center;
-    gap: clamp(12px, 2vw, 30px);
-    padding-right: 10vw;
-    align-self: center;
+    gap: clamp(8px, 1.5vw, 20px);
+    flex-shrink: 0;
 }
 
 .control-btn {
     cursor: pointer;
-    opacity: 0.7;
+    opacity: 0.6;
     transition: all 0.2s;
     display: flex;
     align-items: center;
@@ -997,50 +939,117 @@ body, html {
 }
 
 .control-btn svg {
-    width: clamp(20px, 3vw, 40px);
-    height: clamp(20px, 3vw, 40px);
+    width: clamp(22px, 3vw, 38px);
+    height: clamp(22px, 3vw, 38px);
 }
 
 .control-btn:hover { opacity: 1; transform: scale(1.1); }
 
 .play-pause-btn {
-    width: clamp(48px, 7vw, 90px);
-    height: clamp(48px, 7vw, 90px);
-    background: white;
+    width: clamp(50px, 7vw, 80px);
+    height: clamp(50px, 7vw, 80px);
+    background: rgba(255,255,255,0.95);
     border-radius: 50%;
-    color: black !important;
+    color: #1a1a1a !important;
     box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    opacity: 1;
 }
 
 .play-pause-btn svg {
-    width: clamp(18px, 2.8vw, 36px);
-    height: clamp(18px, 2.8vw, 36px);
+    width: clamp(20px, 2.8vw, 32px);
+    height: clamp(20px, 2.8vw, 32px);
 }
 
-.shuffle-btn {
+.shuffle-btn, .repeat-btn {
     opacity: 0.4;
     transition: all 0.2s;
 }
 
-.shuffle-btn.active {
+.shuffle-btn.active, .repeat-btn.active {
     opacity: 1;
     color: var(--gold); 
 }
 
-.shuffle-btn svg {
-    width: clamp(16px, 2.2vw, 30px);
-    height: clamp(16px, 2.2vw, 30px);
+.shuffle-btn svg, .repeat-btn svg {
+    width: clamp(18px, 2.4vw, 28px);
+    height: clamp(18px, 2.4vw, 28px);
+}
+
+/* Volume Slider Row */
+.volume-slider-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.5vw, 20px);
+    width: 100%;
+    padding: 0 clamp(5px, 1vw, 15px);
+}
+
+.volume-icon {
+    color: rgba(255,255,255,0.5);
+    flex-shrink: 0;
+}
+
+.volume-icon svg {
+    width: clamp(18px, 2.5vw, 28px);
+    height: clamp(18px, 2.5vw, 28px);
+}
+
+.volume-slider-container {
+    flex: 1;
+    position: relative;
+    height: clamp(4px, 0.6vw, 8px);
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.volume-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: clamp(14px, 2vw, 22px);
+    height: clamp(14px, 2vw, 22px);
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: clamp(14px, 2vw, 22px);
+    height: clamp(14px, 2vw, 22px);
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.volume-slider-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(255,255,255,0.6);
+    border-radius: 10px;
+    pointer-events: none;
+    transition: width 0.1s ease;
 }
 
 .playlist-name {
-    font-size: clamp(10px, 1.5vw, 20px);
-    font-weight: 300;
-    opacity: 0.4;
-    color: white;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-style: italic;
+    display: none;
 }
 
 .speaker-name {
@@ -1372,7 +1381,11 @@ body.layout-cinematic .play-pause-btn svg {
     height: clamp(28px, 4vw, 48px);
 }
 
-body.layout-cinematic .volume-dial-container {
+body.layout-cinematic .volume-slider-row {
+    display: none;
+}
+
+body.layout-cinematic .mini-album-art {
     display: none;
 }
 
