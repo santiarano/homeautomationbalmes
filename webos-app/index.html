@@ -132,23 +132,30 @@
             <div class="divider"></div>
         </div>
 
-        <div class="music-player">
-            <!-- Floating Album Art -->
-            <div class="album-art" id="album-art">
-                <img id="album-img" src="" alt="Album Art">
-                <div class="album-art-placeholder" id="album-placeholder">🎵</div>
+        <!-- Playlist Carousel (replaces floating album art) -->
+        <div class="playlist-carousel-wrapper">
+            <div class="playlist-carousel" id="playlist-carousel">
+                <!-- Playlist tiles will be dynamically inserted here -->
             </div>
-            
-            <!-- Lyrics Display (next to album art) -->
-            <div class="lyrics-container" id="lyrics-container">
-                <div class="lyrics-line lyrics-current" id="lyrics-current"></div>
-                <div class="lyrics-line lyrics-next" id="lyrics-next"></div>
-            </div>
+        </div>
+        
+        <!-- Lyrics Display -->
+        <div class="lyrics-container" id="lyrics-container">
+            <div class="lyrics-line lyrics-current" id="lyrics-current"></div>
+            <div class="lyrics-line lyrics-next" id="lyrics-next"></div>
+        </div>
 
+        <div class="music-player">
             <div class="player-content">
                 <!-- Volume, Track Info, Playback Controls -->
                 <div class="player-middle-row">
-                    <!-- Volume Dial (Left) -->
+                    <!-- Mini Album Art (Left) -->
+                    <div class="mini-album-art" id="mini-album-art">
+                        <img id="mini-album-img" src="" alt="Album Art">
+                        <div class="mini-album-placeholder" id="mini-album-placeholder">🎵</div>
+                    </div>
+                    
+                    <!-- Volume Dial -->
                     <div class="volume-dial-container">
                         <span class="vol-btn" onclick="adjustVolume(-0.05)">−</span>
                         <div class="volume-dial">

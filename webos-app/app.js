@@ -135,6 +135,18 @@ let activeMediaSource = SONOS_ENTITY;
 let sonosState = null;
 let appletvState = null;
 
+// Playlist data
+let spotifyPlaylists = [];
+let playlistColors = {}; // Cache for extracted colors
+let currentPlayingPlaylistId = null;
+
+// Pastel color palette for fallback (when no art available)
+const PASTEL_COLORS = [
+    '#FFB5BA', '#FFDAB5', '#FFFCB5', '#BAFFC9', '#BAE1FF',
+    '#E0BBE4', '#957DAD', '#D291BC', '#FEC8D8', '#FFDFD3',
+    '#B5EAD7', '#C7CEEA', '#E2F0CB', '#FFDAC1', '#FF9AA2'
+];
+
 // ============================================
 // HOME ASSISTANT API CALLS
 // ============================================
@@ -654,8 +666,8 @@ async function updateMediaPlayer() {
             const artworkPath = attrs.entity_picture || attrs.media_image_url || attrs.media_image_uri;
             if (artworkPath && artworkPath !== currentArtwork) {
                 currentArtwork = artworkPath;
-                const albumImg = document.getElementById('album-img');
-                const placeholder = document.getElementById('album-placeholder');
+                const miniAlbumImg = document.getElementById('mini-album-img');
+                const miniPlaceholder = document.getElementById('mini-album-placeholder');
                 
                 let artworkUrl;
                 if (artworkPath.startsWith('http')) {
@@ -664,20 +676,27 @@ async function updateMediaPlayer() {
                     artworkUrl = `http://${HA_IP}${artworkPath}`;
                 }
                 
-                albumImg.onload = function() {
-                    albumImg.classList.add('loaded');
-                    placeholder.style.display = 'none';
-                };
-                albumImg.onerror = function() {
-                    albumImg.classList.remove('loaded');
-                    placeholder.style.display = 'flex';
-                };
-                albumImg.src = artworkUrl;
+                if (miniAlbumImg) {
+                    miniAlbumImg.onload = function() {
+                        miniAlbumImg.classList.add('loaded');
+                        if (miniPlaceholder) miniPlaceholder.style.display = 'none';
+                    };
+                    miniAlbumImg.onerror = function() {
+                        miniAlbumImg.classList.remove('loaded');
+                        if (miniPlaceholder) miniPlaceholder.style.display = 'flex';
+                    };
+                    miniAlbumImg.src = artworkUrl;
+                }
             } else if (!artworkPath) {
-                document.getElementById('album-img').classList.remove('loaded');
-                document.getElementById('album-placeholder').style.display = 'flex';
+                const miniAlbumImg = document.getElementById('mini-album-img');
+                const miniPlaceholder = document.getElementById('mini-album-placeholder');
+                if (miniAlbumImg) miniAlbumImg.classList.remove('loaded');
+                if (miniPlaceholder) miniPlaceholder.style.display = 'flex';
                 currentArtwork = '';
             }
+            
+            // Detect currently playing playlist
+            detectCurrentPlaylist();
             
             let volumeLevel = 0;
             if (sonosState && typeof sonosState.attributes.volume_level === 'number') {
@@ -766,6 +785,317 @@ async function adjustVolume(delta) {
         }
     } catch (e) {
         console.error("Volume adjust failed:", e);
+    }
+}
+
+// ============================================
+// PLAYLIST CAROUSEL SYSTEM
+// ============================================
+
+// Fetch Spotify playlists from Home Assistant via browse_media
+async function fetchSpotifyPlaylists() {
+    try {
+        console.log('Fetching Spotify playlists...');
+        
+        // First, browse Spotify root to find playlists
+        const response = await fetch(`http://${HA_IP}/api/services/media_player/browse_media`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${TOKEN}`, 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ 
+                entity_id: SONOS_ENTITY,
+                media_content_type: 'spotify://current_user_playlists',
+                media_content_id: ''
+            })
+        });
+        
+        if (!response.ok) {
+            console.log('browse_media service call returned:', response.status);
+            // Try alternative: fetch from Sonos favorites
+            return await fetchSonosFavorites();
+        }
+        
+        const data = await response.json();
+        console.log('Spotify browse response:', data);
+        
+        // Process the playlists
+        if (data && data[0] && data[0].children) {
+            spotifyPlaylists = data[0].children.map(item => ({
+                id: item.media_content_id,
+                title: item.title,
+                thumbnail: item.thumbnail,
+                canPlay: item.can_play
+            }));
+            renderPlaylistCarousel();
+        }
+    } catch (e) {
+        console.error('Failed to fetch Spotify playlists:', e);
+        // Fallback to Sonos favorites
+        await fetchSonosFavorites();
+    }
+}
+
+// Fetch Sonos favorites as fallback
+async function fetchSonosFavorites() {
+    try {
+        console.log('Fetching Sonos favorites...');
+        
+        // Get the media source list from Sonos entity
+        if (sonosState && sonosState.attributes) {
+            const sourceList = sonosState.attributes.source_list || [];
+            
+            // Try to browse Sonos favorites
+            const response = await fetch(`http://${HA_IP}/api/services/media_player/browse_media`, {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bearer ${TOKEN}`, 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ 
+                    entity_id: SONOS_ENTITY,
+                    media_content_type: 'favorites',
+                    media_content_id: ''
+                })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Sonos favorites response:', data);
+                
+                if (data && data[0] && data[0].children) {
+                    spotifyPlaylists = data[0].children.slice(0, 20).map(item => ({
+                        id: item.media_content_id,
+                        title: item.title,
+                        thumbnail: item.thumbnail || '',
+                        canPlay: item.can_play !== false,
+                        contentType: item.media_content_type
+                    }));
+                    renderPlaylistCarousel();
+                    return;
+                }
+            }
+        }
+        
+        // If all else fails, show empty state
+        showPlaylistEmptyState();
+    } catch (e) {
+        console.error('Failed to fetch Sonos favorites:', e);
+        showPlaylistEmptyState();
+    }
+}
+
+// Extract dominant color from an image
+function extractDominantColor(imageUrl) {
+    return new Promise((resolve) => {
+        if (!imageUrl) {
+            resolve(getRandomPastelColor());
+            return;
+        }
+        
+        // Check cache first
+        if (playlistColors[imageUrl]) {
+            resolve(playlistColors[imageUrl]);
+            return;
+        }
+        
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        
+        img.onload = function() {
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Sample at small size for performance
+                canvas.width = 50;
+                canvas.height = 50;
+                ctx.drawImage(img, 0, 0, 50, 50);
+                
+                const imageData = ctx.getImageData(0, 0, 50, 50);
+                const data = imageData.data;
+                
+                let r = 0, g = 0, b = 0, count = 0;
+                
+                // Sample every 4th pixel for speed
+                for (let i = 0; i < data.length; i += 16) {
+                    r += data[i];
+                    g += data[i + 1];
+                    b += data[i + 2];
+                    count++;
+                }
+                
+                if (count > 0) {
+                    r = Math.round(r / count);
+                    g = Math.round(g / count);
+                    b = Math.round(b / count);
+                }
+                
+                // Convert to pastel
+                const pastel = toPastel(r, g, b);
+                playlistColors[imageUrl] = pastel;
+                resolve(pastel);
+            } catch (e) {
+                console.log('Color extraction failed, using random pastel');
+                resolve(getRandomPastelColor());
+            }
+        };
+        
+        img.onerror = function() {
+            resolve(getRandomPastelColor());
+        };
+        
+        // Handle HA proxy URLs
+        if (imageUrl.startsWith('/')) {
+            img.src = `http://${HA_IP}${imageUrl}`;
+        } else {
+            img.src = imageUrl;
+        }
+        
+        // Timeout fallback
+        setTimeout(() => {
+            if (!playlistColors[imageUrl]) {
+                resolve(getRandomPastelColor());
+            }
+        }, 3000);
+    });
+}
+
+// Convert RGB to pastel version
+function toPastel(r, g, b) {
+    // Mix with white to create pastel
+    const mix = 0.6; // 60% white
+    const pastelR = Math.round(r + (255 - r) * mix);
+    const pastelG = Math.round(g + (255 - g) * mix);
+    const pastelB = Math.round(b + (255 - b) * mix);
+    return `rgb(${pastelR}, ${pastelG}, ${pastelB})`;
+}
+
+// Get random pastel color
+function getRandomPastelColor() {
+    return PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)];
+}
+
+// Render playlist carousel
+async function renderPlaylistCarousel() {
+    const carousel = document.getElementById('playlist-carousel');
+    if (!carousel) return;
+    
+    if (spotifyPlaylists.length === 0) {
+        showPlaylistEmptyState();
+        return;
+    }
+    
+    carousel.innerHTML = '';
+    
+    for (const playlist of spotifyPlaylists) {
+        const tile = document.createElement('div');
+        tile.className = 'playlist-tile';
+        tile.dataset.playlistId = playlist.id;
+        
+        // Check if this is the currently playing playlist
+        if (currentPlayingPlaylistId && playlist.id === currentPlayingPlaylistId) {
+            tile.classList.add('now-playing');
+        }
+        
+        // Get pastel background color
+        const bgColor = await extractDominantColor(playlist.thumbnail);
+        tile.style.backgroundColor = bgColor;
+        
+        // Build tile HTML
+        tile.innerHTML = `
+            <div class="playlist-tile-art">
+                ${playlist.thumbnail 
+                    ? `<img src="${playlist.thumbnail.startsWith('/') ? 'http://' + HA_IP + playlist.thumbnail : playlist.thumbnail}" alt="${playlist.title}" onerror="this.parentElement.innerHTML='<div class=\\'playlist-tile-placeholder\\'>🎵</div>'">` 
+                    : '<div class="playlist-tile-placeholder">🎵</div>'
+                }
+            </div>
+            <div class="playlist-tile-title">${playlist.title}</div>
+            <div class="playlist-tile-playing">
+                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            </div>
+        `;
+        
+        // Add click handler
+        tile.addEventListener('click', () => playPlaylist(playlist));
+        
+        carousel.appendChild(tile);
+    }
+}
+
+// Show empty state
+function showPlaylistEmptyState() {
+    const carousel = document.getElementById('playlist-carousel');
+    if (!carousel) return;
+    
+    carousel.innerHTML = '<div class="playlist-carousel-loading">No playlists found</div>';
+}
+
+// Play a playlist
+async function playPlaylist(playlist) {
+    console.log('Playing playlist:', playlist.title);
+    
+    try {
+        // Update UI immediately
+        currentPlayingPlaylistId = playlist.id;
+        updatePlaylistNowPlaying();
+        
+        // Send play command to Sonos via HA
+        const response = await fetch(`http://${HA_IP}/api/services/media_player/play_media`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${TOKEN}`, 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ 
+                entity_id: SONOS_ENTITY,
+                media_content_type: playlist.contentType || 'playlist',
+                media_content_id: playlist.id
+            })
+        });
+        
+        if (!response.ok) {
+            console.error('Failed to play playlist:', response.status);
+        } else {
+            console.log('Playlist playback started');
+            // Refresh media player state after a short delay
+            setTimeout(updateMediaPlayer, 1000);
+        }
+    } catch (e) {
+        console.error('Error playing playlist:', e);
+    }
+}
+
+// Update now playing indicator on tiles
+function updatePlaylistNowPlaying() {
+    const tiles = document.querySelectorAll('.playlist-tile');
+    tiles.forEach(tile => {
+        if (tile.dataset.playlistId === currentPlayingPlaylistId) {
+            tile.classList.add('now-playing');
+        } else {
+            tile.classList.remove('now-playing');
+        }
+    });
+}
+
+// Detect currently playing playlist from media player state
+function detectCurrentPlaylist() {
+    if (!sonosState || !sonosState.attributes) return;
+    
+    const currentPlaylist = sonosState.attributes.media_playlist || 
+                           sonosState.attributes.media_content_id || 
+                           sonosState.attributes.queue_name || '';
+    
+    // Try to match with loaded playlists
+    for (const playlist of spotifyPlaylists) {
+        if (playlist.title === currentPlaylist || playlist.id === currentPlaylist) {
+            if (currentPlayingPlaylistId !== playlist.id) {
+                currentPlayingPlaylistId = playlist.id;
+                updatePlaylistNowPlaying();
+            }
+            return;
+        }
     }
 }
 
@@ -887,8 +1217,16 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWeather();
     updateSonos();
     
+    // Fetch playlists after initial media player update
+    setTimeout(() => {
+        fetchSpotifyPlaylists();
+    }, 2000);
+    
     setInterval(updateClock, 1000);
     setInterval(updateWeather, 300000);
     setInterval(updateSonos, 5000);
+    
+    // Refresh playlists every 10 minutes
+    setInterval(fetchSpotifyPlaylists, 600000);
 });
 
