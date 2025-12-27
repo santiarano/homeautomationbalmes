@@ -792,13 +792,13 @@ async function adjustVolume(delta) {
 // PLAYLIST CAROUSEL SYSTEM
 // ============================================
 
-// Fetch Spotify playlists from Home Assistant via browse_media
+// Fetch playlists from Sonos Favorites via Home Assistant browse_media
 async function fetchSpotifyPlaylists() {
     try {
-        console.log('Fetching Spotify playlists...');
+        console.log('Fetching Sonos playlists...');
         
-        // First, browse Spotify root to find playlists
-        const response = await fetch(`http://${HA_IP}/api/services/media_player/browse_media`, {
+        // Step 1: Browse to favorites folder to get the Playlists subfolder
+        const favResponse = await fetch(`http://${HA_IP}/api/services/media_player/browse_media?return_response`, {
             method: 'POST',
             headers: { 
                 'Authorization': `Bearer ${TOKEN}`, 
@@ -806,82 +806,94 @@ async function fetchSpotifyPlaylists() {
             },
             body: JSON.stringify({ 
                 entity_id: SONOS_ENTITY,
-                media_content_type: 'spotify://current_user_playlists',
+                media_content_type: 'favorites',
                 media_content_id: ''
             })
         });
         
-        if (!response.ok) {
-            console.log('browse_media service call returned:', response.status);
-            // Try alternative: fetch from Sonos favorites
-            return await fetchSonosFavorites();
+        if (!favResponse.ok) {
+            console.log('browse_media favorites failed:', favResponse.status);
+            showPlaylistEmptyState();
+            return;
         }
         
-        const data = await response.json();
-        console.log('Spotify browse response:', data);
+        const favData = await favResponse.json();
+        console.log('Favorites response:', favData);
         
-        // Process the playlists
-        if (data && data[0] && data[0].children) {
-            spotifyPlaylists = data[0].children.map(item => ({
-                id: item.media_content_id,
-                title: item.title,
-                thumbnail: item.thumbnail,
-                canPlay: item.can_play
-            }));
-            renderPlaylistCarousel();
+        // Find the Playlists folder
+        const sonosData = favData.service_response && favData.service_response[SONOS_ENTITY];
+        if (!sonosData || !sonosData.children) {
+            console.log('No favorites children found');
+            showPlaylistEmptyState();
+            return;
         }
-    } catch (e) {
-        console.error('Failed to fetch Spotify playlists:', e);
-        // Fallback to Sonos favorites
-        await fetchSonosFavorites();
-    }
-}
-
-// Fetch Sonos favorites as fallback
-async function fetchSonosFavorites() {
-    try {
-        console.log('Fetching Sonos favorites...');
         
-        // Get the media source list from Sonos entity
-        if (sonosState && sonosState.attributes) {
-            const sourceList = sonosState.attributes.source_list || [];
-            
-            // Try to browse Sonos favorites
-            const response = await fetch(`http://${HA_IP}/api/services/media_player/browse_media`, {
-                method: 'POST',
-                headers: { 
-                    'Authorization': `Bearer ${TOKEN}`, 
-                    'Content-Type': 'application/json' 
-                },
-                body: JSON.stringify({ 
-                    entity_id: SONOS_ENTITY,
-                    media_content_type: 'favorites',
-                    media_content_id: ''
-                })
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Sonos favorites response:', data);
-                
-                if (data && data[0] && data[0].children) {
-                    spotifyPlaylists = data[0].children.slice(0, 20).map(item => ({
-                        id: item.media_content_id,
-                        title: item.title,
-                        thumbnail: item.thumbnail || '',
-                        canPlay: item.can_play !== false,
-                        contentType: item.media_content_type
-                    }));
-                    renderPlaylistCarousel();
-                    return;
-                }
+        const playlistsFolder = sonosData.children.find(c => 
+            c.title === 'Playlists' || c.media_content_type === 'favorites_folder'
+        );
+        
+        if (!playlistsFolder) {
+            // Maybe playlists are directly in favorites - use them
+            const directPlaylists = sonosData.children.filter(c => c.can_play);
+            if (directPlaylists.length > 0) {
+                spotifyPlaylists = directPlaylists.map(item => ({
+                    id: item.media_content_id,
+                    title: item.title,
+                    thumbnail: item.thumbnail || '',
+                    canPlay: item.can_play,
+                    contentType: item.media_content_type
+                }));
+                renderPlaylistCarousel();
+                return;
             }
+            showPlaylistEmptyState();
+            return;
         }
         
-        // If all else fails, show empty state
-        showPlaylistEmptyState();
+        // Step 2: Browse into the Playlists folder
+        const playlistResponse = await fetch(`http://${HA_IP}/api/services/media_player/browse_media?return_response`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${TOKEN}`, 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ 
+                entity_id: SONOS_ENTITY,
+                media_content_type: playlistsFolder.media_content_type,
+                media_content_id: playlistsFolder.media_content_id
+            })
+        });
+        
+        if (!playlistResponse.ok) {
+            console.log('browse_media playlists folder failed:', playlistResponse.status);
+            showPlaylistEmptyState();
+            return;
+        }
+        
+        const playlistData = await playlistResponse.json();
+        console.log('Playlists folder response:', playlistData);
+        
+        const playlistSonosData = playlistData.service_response && playlistData.service_response[SONOS_ENTITY];
+        if (!playlistSonosData || !playlistSonosData.children) {
+            console.log('No playlists found in folder');
+            showPlaylistEmptyState();
+            return;
+        }
+        
+        // Map the playlists
+        spotifyPlaylists = playlistSonosData.children.filter(item => item.can_play).map(item => ({
+            id: item.media_content_id,
+            title: item.title,
+            thumbnail: item.thumbnail || '',
+            canPlay: item.can_play,
+            contentType: item.media_content_type
+        }));
+        
+        console.log(`Found ${spotifyPlaylists.length} playlists`);
+        renderPlaylistCarousel();
+        
     } catch (e) {
-        console.error('Failed to fetch Sonos favorites:', e);
+        console.error('Failed to fetch playlists:', e);
         showPlaylistEmptyState();
     }
 }
