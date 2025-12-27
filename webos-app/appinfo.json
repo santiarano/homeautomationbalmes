@@ -1,0 +1,19 @@
+{
+    "id": "com.standbyme.dashboard",
+    "version": "1.2.3",
+    "vendor": "StandByMe Home",
+    "type": "web",
+    "main": "index.html",
+    "title": "Home Dashboard",
+    "icon": "icon.png",
+    "largeIcon": "largeIcon.png",
+    "bgColor": "#000000",
+    "disableBackHistoryAPI": true,
+    "transparent": false,
+    "requiredScreenRotation": "free",
+    "supportPortraitMode": true,
+    "supportAutoOrientation": true,
+    "supportTouchMode": "full",
+    "noSplashOnLaunch": true,
+    "handlesRemoteKeyEvent": false
+}

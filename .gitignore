@@ -1,0 +1,35 @@
+# Build artifacts
+*.ipk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node (if ever added)
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Screenshots from testing
+*.png
+!webos-app/Icons/*.png
+!webos-app/*.png
+

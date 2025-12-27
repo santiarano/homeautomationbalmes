@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="webOS" content="true">
+    <meta name="webOSAppType" content="web">
+    <title>StandByMe Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background"></div>
+    <div class="dark-overlay" id="dark-overlay"></div>
+    
+    <!-- Clock + Settings (top right) -->
+    <div class="top-right">
+        <div class="clock" id="clock">12:00 PM</div>
+        <div class="settings-btn" onclick="openSettings()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+            </svg>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="settings-modal" id="settings-modal">
+        <div class="settings-panel">
+            <div class="settings-title">Settings</div>
+            
+            <div class="setting-item">
+                <span class="setting-label">Show Lyrics</span>
+                <div class="toggle-switch" id="toggle-lyrics" onclick="toggleLyricsSetting()"></div>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">Background Darkness</span>
+                <div class="slider-container">
+                    <span class="slider-value" id="darkness-value">0%</span>
+                    <input type="range" class="slider" id="darkness-slider" min="0" max="100" value="0" oninput="updateDarkness(this.value)">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">Player Layout</span>
+                <div class="layout-selector">
+                    <div class="layout-option" id="layout-classic" onclick="setLayout('classic')">
+                        <div class="layout-preview layout-preview-classic">
+                            <div class="lp-art"></div>
+                            <div class="lp-controls"></div>
+                        </div>
+                        <span>Classic</span>
+                    </div>
+                    <div class="layout-option" id="layout-cinematic" onclick="setLayout('cinematic')">
+                        <div class="layout-preview layout-preview-cinematic">
+                            <div class="lp-art-full"></div>
+                            <div class="lp-overlay"></div>
+                        </div>
+                        <span>Cinematic</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="settings-close" onclick="closeSettings()">Done</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="weather-section">
+                <!-- Dynamic weather icon (updates based on condition) -->
+                <div class="wx-icon" id="weather-icon"></div>
+
+                <div class="temp" id="temperature">--°</div>
+                <div class="condition" id="weather-condition">Loading...</div>
+
+                <!-- Temperature details: High, Low, Feels Like -->
+                <div class="temp-details" id="temp-details">
+                    <span class="temp-detail-item">
+                        <span class="temp-detail-label">High:</span>
+                        <span class="temp-detail-value" id="temp-high">—</span>
+                    </span>
+                    <span class="temp-detail-separator">•</span>
+                    <span class="temp-detail-item">
+                        <span class="temp-detail-label">Low:</span>
+                        <span class="temp-detail-value" id="temp-low">—</span>
+                    </span>
+                    <span class="temp-detail-separator">•</span>
+                    <span class="temp-detail-item">
+                        <span class="temp-detail-label">Feels:</span>
+                        <span class="temp-detail-value" id="temp-feels">—</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="button-grid">
+                <!-- Left column (gold halo) -->
+                <div class="btn btn--gold" onclick="triggerHA('automation', 'awning_up')">
+                    <div class="btn-inner">
+                        <img class="btn-icon" src="webos-app/Icons/open awning_gold.png" alt="Open Awning">
+                        <div class="btn-label">Open<br>Awning</div>
+                </div>
+                </div>
+
+                <!-- Right column (silver halo) -->
+                <div class="btn btn--silver" onclick="triggerHA('automation', 'awning_down')">
+                    <div class="btn-inner">
+                        <img class="btn-icon" src="webos-app/Icons/close awning_white.png" alt="Close Awning">
+                        <div class="btn-label">Close<br>Awning</div>
+                </div>
+                </div>
+
+                <!-- Left column (gold halo) -->
+                <div class="btn btn--gold" onclick="triggerHA('script', 'turn_tv_on')">
+                    <div class="btn-inner">
+                        <img class="btn-icon" src="webos-app/Icons/movie time_gold.png" alt="Movie Time">
+                        <div class="btn-label">Movie<br>Time</div>
+            </div>
+                </div>
+
+                <!-- Right column (silver halo) -->
+                <div class="btn btn--silver" onclick="triggerHA('script', 'turn_tv_off')">
+                    <div class="btn-inner">
+                        <img class="btn-icon" src="webos-app/Icons/end show_white.png" alt="End Show">
+                        <div class="btn-label">End<br>Show</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+        </div>
+
+        <div class="music-player">
+            <!-- Floating Album Art -->
+            <div class="album-art" id="album-art">
+                <img id="album-img" src="" alt="Album Art">
+                <div class="album-art-placeholder" id="album-placeholder">🎵</div>
+            </div>
+            
+            <!-- Lyrics Display (next to album art) -->
+            <div class="lyrics-container" id="lyrics-container">
+                <div class="lyrics-line lyrics-current" id="lyrics-current"></div>
+                <div class="lyrics-line lyrics-next" id="lyrics-next"></div>
+            </div>
+
+            <div class="player-content">
+                <!-- Volume, Track Info, Playback Controls -->
+                <div class="player-middle-row">
+                    <!-- Volume Dial (Left) -->
+                    <div class="volume-dial-container">
+                        <span class="vol-btn" onclick="adjustVolume(-0.05)">−</span>
+                        <div class="volume-dial">
+                            <svg viewBox="0 0 80 80">
+                                <circle class="bg-circle" cx="40" cy="40" r="36"></circle>
+                                <circle class="progress-circle" id="volume-ring" cx="40" cy="40" r="36"></circle>
+                            </svg>
+                            <div class="volume-value" id="volume">60</div>
+                        </div>
+                        <span class="vol-btn" onclick="adjustVolume(0.05)">+</span>
+                    </div>
+
+                    <!-- Track Info (Center) -->
+                    <div class="track-info">
+                        <div class="track-title" id="song">Waiting for Sonos...</div>
+                        <div class="album-name" id="album">Sunset Lounge</div>
+                        <div class="artist-name" id="artist">Connecting...</div>
+                        <div class="playlist-name" id="playlist"></div>
+                    </div>
+
+                    <!-- Playback Controls (Right) -->
+                    <div class="playback-controls">
+                        <div class="control-btn" onclick="sonos('previous')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                            </svg>
+                        </div>
+                        <div class="control-btn play-pause-btn" onclick="sonos('toggle')" id="play-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        <div class="control-btn" onclick="sonos('next')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="control-btn shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="speaker-name" id="speaker-info">Sonos</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
