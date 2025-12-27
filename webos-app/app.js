@@ -898,24 +898,49 @@ async function fetchSpotifyPlaylists() {
     }
 }
 
-// Extract dominant color from an image
-function extractDominantColor(imageUrl) {
+// Generate a consistent pastel color based on a string (title)
+function generatePastelFromString(str) {
+    // Simple hash function
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    
+    // Use hash to generate HSL color
+    const hue = Math.abs(hash) % 360;
+    const saturation = 50 + (Math.abs(hash >> 8) % 30); // 50-80%
+    const lightness = 75 + (Math.abs(hash >> 16) % 15);  // 75-90% (pastel range)
+    
+    return `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`;
+}
+
+// Extract dominant color from an image (with fallback to string-based color)
+function extractDominantColor(imageUrl, title = '') {
     return new Promise((resolve) => {
-        if (!imageUrl) {
-            resolve(getRandomPastelColor());
+        // Check cache first
+        const cacheKey = imageUrl || title;
+        if (playlistColors[cacheKey]) {
+            resolve(playlistColors[cacheKey]);
             return;
         }
         
-        // Check cache first
-        if (playlistColors[imageUrl]) {
-            resolve(playlistColors[imageUrl]);
+        // If no image URL, use title-based color
+        if (!imageUrl) {
+            const color = generatePastelFromString(title);
+            playlistColors[cacheKey] = color;
+            resolve(color);
             return;
         }
         
         const img = new Image();
         img.crossOrigin = 'Anonymous';
         
+        let resolved = false;
+        
         img.onload = function() {
+            if (resolved) return;
             try {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -944,18 +969,27 @@ function extractDominantColor(imageUrl) {
                     b = Math.round(b / count);
                 }
                 
-                // Convert to pastel
+                // Convert to pastel with transparency
                 const pastel = toPastel(r, g, b);
-                playlistColors[imageUrl] = pastel;
+                playlistColors[cacheKey] = pastel;
+                resolved = true;
                 resolve(pastel);
             } catch (e) {
-                console.log('Color extraction failed, using random pastel');
-                resolve(getRandomPastelColor());
+                // CORS or other error - use title-based color
+                console.log('Color extraction failed for', title, '- using generated color');
+                const color = generatePastelFromString(title || imageUrl);
+                playlistColors[cacheKey] = color;
+                resolved = true;
+                resolve(color);
             }
         };
         
         img.onerror = function() {
-            resolve(getRandomPastelColor());
+            if (resolved) return;
+            const color = generatePastelFromString(title || imageUrl);
+            playlistColors[cacheKey] = color;
+            resolved = true;
+            resolve(color);
         };
         
         // Handle HA proxy URLs
@@ -965,28 +999,26 @@ function extractDominantColor(imageUrl) {
             img.src = imageUrl;
         }
         
-        // Timeout fallback
+        // Timeout fallback - use title-based color
         setTimeout(() => {
-            if (!playlistColors[imageUrl]) {
-                resolve(getRandomPastelColor());
+            if (!resolved) {
+                const color = generatePastelFromString(title || imageUrl);
+                playlistColors[cacheKey] = color;
+                resolved = true;
+                resolve(color);
             }
-        }, 3000);
+        }, 1500);
     });
 }
 
-// Convert RGB to pastel version
+// Convert RGB to pastel version with transparency
 function toPastel(r, g, b) {
     // Mix with white to create pastel
-    const mix = 0.6; // 60% white
+    const mix = 0.55; // 55% white mix for softer pastels
     const pastelR = Math.round(r + (255 - r) * mix);
     const pastelG = Math.round(g + (255 - g) * mix);
     const pastelB = Math.round(b + (255 - b) * mix);
-    return `rgb(${pastelR}, ${pastelG}, ${pastelB})`;
-}
-
-// Get random pastel color
-function getRandomPastelColor() {
-    return PASTEL_COLORS[Math.floor(Math.random() * PASTEL_COLORS.length)];
+    return `rgba(${pastelR}, ${pastelG}, ${pastelB}, 0.9)`;
 }
 
 // Render playlist carousel
@@ -1011,8 +1043,8 @@ async function renderPlaylistCarousel() {
             tile.classList.add('now-playing');
         }
         
-        // Get pastel background color
-        const bgColor = await extractDominantColor(playlist.thumbnail);
+        // Get pastel background color based on thumbnail or title
+        const bgColor = await extractDominantColor(playlist.thumbnail, playlist.title);
         tile.style.backgroundColor = bgColor;
         
         // Build tile HTML
