@@ -147,70 +147,58 @@
 
         <div class="music-player">
             <div class="player-content">
-                <!-- Top Row: Album Art, Track Info, Controls -->
-                <div class="player-top-row">
+                <!-- Volume, Track Info, Playback Controls -->
+                <div class="player-middle-row">
                     <!-- Mini Album Art (Left) -->
                     <div class="mini-album-art" id="mini-album-art">
                         <img id="mini-album-img" src="" alt="Album Art">
                         <div class="mini-album-placeholder" id="mini-album-placeholder">🎵</div>
                     </div>
+                    
+                    <!-- Volume Dial -->
+                    <div class="volume-dial-container">
+                        <span class="vol-btn" onclick="adjustVolume(-0.05)">−</span>
+                        <div class="volume-dial">
+                            <svg viewBox="0 0 80 80">
+                                <circle class="bg-circle" cx="40" cy="40" r="36"></circle>
+                                <circle class="progress-circle" id="volume-ring" cx="40" cy="40" r="36"></circle>
+                            </svg>
+                            <div class="volume-value" id="volume">60</div>
+                        </div>
+                        <span class="vol-btn" onclick="adjustVolume(0.05)">+</span>
+                    </div>
 
-                    <!-- Track Info + Controls (Right of album) -->
-                    <div class="player-right-section">
-                        <!-- Track Info -->
-                        <div class="track-info">
-                            <div class="track-title" id="song">Waiting for Sonos...</div>
-                            <!-- Details row: Album/Artist + Controls inline -->
-                            <div class="track-details">
-                                <div class="track-details-text">
-                                    <div class="album-name" id="album">Sunset Lounge</div>
-                                    <div class="artist-name" id="artist">Connecting...</div>
-                                </div>
-                                <!-- Playback Controls (inline with text) -->
-                                <div class="playback-controls">
-                                    <div class="control-btn shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
-                                        </svg>
-                                    </div>
-                                    <div class="control-btn" onclick="sonos('previous')">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="control-btn play-pause-btn" onclick="sonos('toggle')" id="play-btn">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M8 5v14l11-7z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="control-btn" onclick="sonos('next')">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="control-btn repeat-btn" id="repeat-btn" onclick="toggleRepeat()">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Track Info (Center) -->
+                    <div class="track-info">
+                        <div class="track-title" id="song">Waiting for Sonos...</div>
+                        <div class="album-name" id="album">Sunset Lounge</div>
+                        <div class="artist-name" id="artist">Connecting...</div>
+                        <div class="playlist-name" id="playlist"></div>
+                    </div>
+
+                    <!-- Playback Controls (Right) -->
+                    <div class="playback-controls">
+                        <div class="control-btn" onclick="sonos('previous')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                            </svg>
+                        </div>
+                        <div class="control-btn play-pause-btn" onclick="sonos('toggle')" id="play-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        <div class="control-btn" onclick="sonos('next')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="control-btn shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                            </svg>
                         </div>
                     </div>
-                </div>
-
-                <!-- Volume Slider Row -->
-                <div class="volume-slider-row">
-                    <svg class="volume-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 9v6h4l5 5V4L7 9H3z"/>
-                    </svg>
-                    <div class="volume-slider-container">
-                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="60" oninput="setVolume(this.value)">
-                        <div class="volume-slider-fill" id="volume-fill"></div>
-                    </div>
-                    <svg class="volume-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                    </svg>
                 </div>
             </div>
 

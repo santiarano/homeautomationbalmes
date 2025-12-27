@@ -703,18 +703,15 @@ async function updateMediaPlayer() {
                 volumeLevel = sonosState.attributes.volume_level;
             }
             
-            // Update volume slider
-            updateVolumeSliderUI(volumeLevel);
+            const volumePercent = Math.round(volumeLevel * 100);
+            document.getElementById('volume').textContent = volumePercent;
             
-            // Update repeat button
-            const repeatBtn = document.getElementById('repeat-btn');
-            if (repeatBtn) {
-                const repeatMode = attrs.repeat || 'off';
-                if (repeatMode !== 'off') {
-                    repeatBtn.classList.add('active');
-                } else {
-                    repeatBtn.classList.remove('active');
-                }
+            const ring = document.getElementById('volume-ring');
+            if (ring) {
+                const radius = 36;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (volumeLevel * circumference);
+                ring.style.strokeDashoffset = offset;
             }
             
             const isPlaying = state === 'playing';
@@ -755,15 +752,13 @@ async function updateMediaPlayer() {
 
 const updateSonos = updateMediaPlayer;
 
-// Set volume from slider
-async function setVolume(value) {
+// Adjust volume
+async function adjustVolume(delta) {
     try {
-        const newVol = parseInt(value) / 100;
-        
-        console.log(`Volume set to: ${value}%`);
-        
-        // Update UI immediately
-        updateVolumeSliderUI(newVol);
+        let currentVol = sonosState?.attributes?.volume_level || 0;
+        let newVol = Math.min(1, Math.max(0, currentVol + delta));
+
+        console.log(`Volume: ${Math.round(currentVol * 100)}% -> ${Math.round(newVol * 100)}%`);
 
         await fetch(`http://${HA_IP}/api/services/media_player/volume_set`, {
             method: 'POST',
@@ -777,51 +772,19 @@ async function setVolume(value) {
             })
         });
         
+        document.getElementById('volume').textContent = Math.round(newVol * 100);
+        const ring = document.getElementById('volume-ring');
+        if (ring) {
+            const radius = 36;
+            const circumference = 2 * Math.PI * radius;
+            ring.style.strokeDashoffset = circumference - (newVol * circumference);
+        }
+        
         if (sonosState && sonosState.attributes) {
             sonosState.attributes.volume_level = newVol;
         }
     } catch (e) {
-        console.error("Volume set failed:", e);
-    }
-}
-
-// Update volume slider UI
-function updateVolumeSliderUI(volumeLevel) {
-    const slider = document.getElementById('volume-slider');
-    const fill = document.getElementById('volume-fill');
-    const percent = Math.round(volumeLevel * 100);
-    
-    if (slider) slider.value = percent;
-    if (fill) fill.style.width = `${percent}%`;
-}
-
-// Toggle repeat mode
-async function toggleRepeat() {
-    try {
-        const currentRepeat = sonosState?.attributes?.repeat || 'off';
-        let newRepeat = 'off';
-        
-        // Cycle: off -> all -> one -> off
-        if (currentRepeat === 'off') newRepeat = 'all';
-        else if (currentRepeat === 'all') newRepeat = 'one';
-        else newRepeat = 'off';
-        
-        await fetch(`http://${HA_IP}/api/services/media_player/repeat_set`, {
-            method: 'POST',
-            headers: { 
-                'Authorization': `Bearer ${TOKEN}`, 
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify({ 
-                entity_id: activeMediaSource,
-                repeat: newRepeat
-            })
-        });
-        
-        // Refresh UI after command
-        setTimeout(updateMediaPlayer, 500);
-    } catch (e) {
-        console.error("Repeat toggle failed:", e);
+        console.error("Volume adjust failed:", e);
     }
 }
 
