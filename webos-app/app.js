@@ -408,41 +408,48 @@ function titleCaseCondition(raw) {
 
 function getWeatherIcon(condition) {
     const cond = condition.toLowerCase();
-    const icons = {
-        'clear': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="30"/><line x1="100" y1="20" x2="100" y2="5" stroke-width="8"/><line x1="100" y1="180" x2="100" y2="195" stroke-width="8"/><line x1="20" y1="100" x2="5" y2="100" stroke-width="8"/><line x1="180" y1="100" x2="195" y2="100" stroke-width="8"/><line x1="40" y1="40" x2="28" y2="28" stroke-width="8"/><line x1="160" y1="160" x2="172" y2="172" stroke-width="8"/><line x1="40" y1="160" x2="28" y2="172" stroke-width="8"/><line x1="160" y1="40" x2="172" y2="28" stroke-width="8"/></svg>',
-        'sunny': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="30"/><line x1="100" y1="20" x2="100" y2="5" stroke-width="8"/><line x1="100" y1="180" x2="100" y2="195" stroke-width="8"/><line x1="20" y1="100" x2="5" y2="100" stroke-width="8"/><line x1="180" y1="100" x2="195" y2="100" stroke-width="8"/><line x1="40" y1="40" x2="28" y2="28" stroke-width="8"/><line x1="160" y1="160" x2="172" y2="172" stroke-width="8"/><line x1="40" y1="160" x2="28" y2="172" stroke-width="8"/><line x1="160" y1="40" x2="172" y2="28" stroke-width="8"/></svg>',
-        'clear-day': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="30"/><line x1="100" y1="20" x2="100" y2="5" stroke-width="8"/><line x1="100" y1="180" x2="100" y2="195" stroke-width="8"/><line x1="20" y1="100" x2="5" y2="100" stroke-width="8"/><line x1="180" y1="100" x2="195" y2="100" stroke-width="8"/><line x1="40" y1="40" x2="28" y2="28" stroke-width="8"/><line x1="160" y1="160" x2="172" y2="172" stroke-width="8"/><line x1="40" y1="160" x2="28" y2="172" stroke-width="8"/><line x1="160" y1="40" x2="172" y2="28" stroke-width="8"/></svg>',
-        'partlycloudy': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="80" cy="80" r="25"/><line x1="80" y1="50" x2="80" y2="40" stroke-width="6"/><line x1="80" y1="120" x2="80" y2="130" stroke-width="6"/><line x1="50" y1="80" x2="40" y2="80" stroke-width="6"/><line x1="110" y1="80" x2="120" y2="80" stroke-width="6"/><path d="M140 130H80c-15 0-28-10-28-23 0-12 9-22 21-23 5-15 20-25 36-22 8 2 16 7 21 13 16 1 29 13 29 28 0 15-12 27-27 27Z" stroke-width="8"/></svg>',
-        'partly-cloudy': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="80" cy="80" r="25"/><line x1="80" y1="50" x2="80" y2="40" stroke-width="6"/><line x1="80" y1="120" x2="80" y2="130" stroke-width="6"/><line x1="50" y1="80" x2="40" y2="80" stroke-width="6"/><line x1="110" y1="80" x2="120" y2="80" stroke-width="6"/><path d="M140 130H80c-15 0-28-10-28-23 0-12 9-22 21-23 5-15 20-25 36-22 8 2 16 7 21 13 16 1 29 13 29 28 0 15-12 27-27 27Z" stroke-width="8"/></svg>',
-        'mostlysunny': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="80" cy="80" r="25"/><line x1="80" y1="50" x2="80" y2="40" stroke-width="6"/><line x1="80" y1="120" x2="80" y2="130" stroke-width="6"/><line x1="50" y1="80" x2="40" y2="80" stroke-width="6"/><line x1="110" y1="80" x2="120" y2="80" stroke-width="6"/><path d="M140 130H80c-15 0-28-10-28-23 0-12 9-22 21-23 5-15 20-25 36-22 8 2 16 7 21 13 16 1 29 13 29 28 0 15-12 27-27 27Z" stroke-width="8"/></svg>',
-        'mostly_sunny': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="80" cy="80" r="25"/><line x1="80" y1="50" x2="80" y2="40" stroke-width="6"/><line x1="80" y1="120" x2="80" y2="130" stroke-width="6"/><line x1="50" y1="80" x2="40" y2="80" stroke-width="6"/><line x1="110" y1="80" x2="120" y2="80" stroke-width="6"/><path d="M140 130H80c-15 0-28-10-28-23 0-12 9-22 21-23 5-15 20-25 36-22 8 2 16 7 21 13 16 1 29 13 29 28 0 15-12 27-27 27Z" stroke-width="8"/></svg>',
-        'cloudy': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M160 140H70c-20 0-36-14-36-32 0-16 12-30 28-32 8-20 28-34 50-30 12 3 22 11 28 20 22 2 40 18 40 40 0 22-18 40-40 42Z" stroke-width="8"/></svg>',
-        'cloud': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M160 140H70c-20 0-36-14-36-32 0-16 12-30 28-32 8-20 28-34 50-30 12 3 22 11 28 20 22 2 40 18 40 40 0 22-18 40-40 42Z" stroke-width="8"/></svg>',
-        'rainy': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><line x1="80" y1="150" x2="80" y2="175" stroke-width="6"/><line x1="100" y1="150" x2="100" y2="175" stroke-width="6"/><line x1="120" y1="150" x2="120" y2="175" stroke-width="6"/></svg>',
-        'rain': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><line x1="80" y1="150" x2="80" y2="175" stroke-width="6"/><line x1="100" y1="150" x2="100" y2="175" stroke-width="6"/><line x1="120" y1="150" x2="120" y2="175" stroke-width="6"/></svg>',
-        'pouring': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><line x1="75" y1="150" x2="75" y2="180" stroke-width="6"/><line x1="90" y1="150" x2="90" y2="180" stroke-width="6"/><line x1="105" y1="150" x2="105" y2="180" stroke-width="6"/><line x1="120" y1="150" x2="120" y2="180" stroke-width="6"/></svg>',
-        'snowy': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><circle cx="80" cy="160" r="4"/><circle cx="100" cy="160" r="4"/><circle cx="120" cy="160" r="4"/><line x1="76" y1="156" x2="84" y2="164" stroke-width="4"/><line x1="84" y1="156" x2="76" y2="164" stroke-width="4"/><line x1="96" y1="156" x2="104" y2="164" stroke-width="4"/><line x1="104" y1="156" x2="96" y2="164" stroke-width="4"/><line x1="116" y1="156" x2="124" y2="164" stroke-width="4"/><line x1="124" y1="156" x2="116" y2="164" stroke-width="4"/></svg>',
-        'snow': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><circle cx="80" cy="160" r="4"/><circle cx="100" cy="160" r="4"/><circle cx="120" cy="160" r="4"/><line x1="76" y1="156" x2="84" y2="164" stroke-width="4"/><line x1="84" y1="156" x2="76" y2="164" stroke-width="4"/><line x1="96" y1="156" x2="104" y2="164" stroke-width="4"/><line x1="104" y1="156" x2="96" y2="164" stroke-width="4"/><line x1="116" y1="156" x2="124" y2="164" stroke-width="4"/><line x1="124" y1="156" x2="116" y2="164" stroke-width="4"/></svg>',
-        'foggy': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8" opacity="0.6"/><line x1="50" y1="150" x2="150" y2="150" stroke-width="6" opacity="0.5"/><line x1="60" y1="165" x2="140" y2="165" stroke-width="6" opacity="0.5"/></svg>',
-        'fog': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8" opacity="0.6"/><line x1="50" y1="150" x2="150" y2="150" stroke-width="6" opacity="0.5"/><line x1="60" y1="165" x2="140" y2="165" stroke-width="6" opacity="0.5"/></svg>',
-        'misty': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8" opacity="0.6"/><line x1="50" y1="150" x2="150" y2="150" stroke-width="6" opacity="0.5"/><line x1="60" y1="165" x2="140" y2="165" stroke-width="6" opacity="0.5"/></svg>',
-        'windy': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><path d="M40 150 Q60 145 80 150 T120 150" stroke-width="6" fill="none"/><path d="M50 170 Q70 165 90 170 T130 170" stroke-width="6" fill="none"/></svg>',
-        'wind': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><path d="M40 150 Q60 145 80 150 T120 150" stroke-width="6" fill="none"/><path d="M50 170 Q70 165 90 170 T130 170" stroke-width="6" fill="none"/></svg>',
-        'thunderstorm': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><path d="M85 150 L95 170 L85 170 L100 190 L90 150 Z" stroke-width="6" fill="var(--gold)"/></svg>',
-        'storm': '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M150 130H60c-18 0-32-12-32-28 0-14 11-26 25-28 6-18 24-30 43-26 10 2 19 8 25 16 19 1 35 15 35 34 0 18-14 32-33 32Z" stroke-width="8"/><path d="M85 150 L95 170 L85 170 L100 190 L90 150 Z" stroke-width="6" fill="var(--gold)"/></svg>',
+    
+    // Map conditions to PNG icon files
+    const iconMap = {
+        'clear': 'clear.png',
+        'sunny': 'clear.png',
+        'clear-day': 'clear.png',
+        'partlycloudy': 'partlycloudy.png',
+        'partly-cloudy': 'partlycloudy.png',
+        'mostlysunny': 'partlycloudy.png',
+        'mostly_sunny': 'partlycloudy.png',
+        'cloudy': 'cloudy.png',
+        'cloud': 'cloudy.png',
+        'rainy': 'rainy.png',
+        'rain': 'rainy.png',
+        'pouring': 'pouring.png',
+        'snowy': 'snowy.png',
+        'snow': 'snowy.png',
+        'foggy': 'foggy.png',
+        'fog': 'foggy.png',
+        'misty': 'foggy.png',
+        'windy': 'windy.png',
+        'wind': 'windy.png',
+        'thunderstorm': 'rainy.png',  // Use rainy as fallback for thunderstorm
+        'storm': 'rainy.png',
     };
     
-    if (icons[cond]) return icons[cond];
+    // Get the icon file name
+    let iconFile = iconMap[cond];
     
-    if (cond.includes('rain')) return icons['rainy'];
-    if (cond.includes('snow')) return icons['snowy'];
-    if (cond.includes('cloud')) return icons['cloudy'];
-    if (cond.includes('fog') || cond.includes('mist')) return icons['foggy'];
-    if (cond.includes('wind')) return icons['windy'];
-    if (cond.includes('storm') || cond.includes('thunder')) return icons['thunderstorm'];
-    if (cond.includes('clear') || cond.includes('sun')) return icons['clear'];
+    // Fallback logic if no direct match
+    if (!iconFile) {
+        if (cond.includes('rain')) iconFile = 'rainy.png';
+        else if (cond.includes('snow')) iconFile = 'snowy.png';
+        else if (cond.includes('cloud')) iconFile = 'cloudy.png';
+        else if (cond.includes('sun') || cond.includes('clear')) iconFile = 'clear.png';
+        else if (cond.includes('fog') || cond.includes('mist')) iconFile = 'foggy.png';
+        else if (cond.includes('wind')) iconFile = 'windy.png';
+        else iconFile = 'cloudy.png'; // Default fallback
+    }
     
-    return icons['partlycloudy'];
+    // Return an img tag pointing to the PNG file
+    return `<img src="Icons/weather/${iconFile}" alt="${condition}" class="weather-icon-img">`;
 }
 
 async function updateWeather() {
