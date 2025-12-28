@@ -317,10 +317,10 @@ body, html {
     padding: 0;
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     font-family: 'Roboto', sans-serif;
     background-color: #000;
-    touch-action: manipulation;
+    touch-action: pan-x pan-y;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
@@ -374,7 +374,7 @@ body, html {
     justify-content: flex-start;
     height: 100%;
     padding: var(--top-spacing) 20px;
-    overflow-y: auto;
+    overflow-y: visible;
     position: relative;
     z-index: 2;
 }
@@ -518,6 +518,124 @@ body, html {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
     margin: 26px auto;
+    position: relative;
+    z-index: 0;
+    flex-shrink: 0;
+}
+
+/* Adjust top divider spacing before actions carousel - same approach as bottom */
+.divider + .actions-carousel {
+    margin-top: 0;
+}
+
+/* Adjust bottom divider spacing after actions carousel */
+.actions-carousel + .divider {
+    margin-top: 6px;
+    margin-bottom: 26px;
+}
+
+/* ============================================
+   ACTIONS CAROUSEL (Circle Buttons)
+   ============================================ */
+.actions-carousel {
+    width: 100%;
+    position: relative;
+    margin: -10px 0 0 0;
+    overflow: visible;
+    padding: 40px 0 0 0;
+}
+
+.actions-track-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    padding: 57px 0 30px 0;
+    margin: -67px 0 -30px 0;
+    min-height: calc(100% + 87px);
+}
+
+/* Ensure top spacing matches bottom - prevent clipping from top divider */
+.divider + .actions-carousel .actions-track-wrapper {
+    padding-top: 57px;
+    margin-top: -67px;
+}
+
+.actions-track-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.actions-track {
+    display: flex;
+    width: 100%;
+    position: relative;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.actions-track::-webkit-scrollbar {
+    display: none;
+}
+
+.actions-page {
+    min-width: 100%;
+    width: 100%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    z-index: 1;
+    overflow: visible;
+    padding: 0;
+}
+
+/* Placeholder buttons for empty pages */
+.button-grid--placeholder {
+    opacity: 0.3;
+}
+
+.btn--placeholder {
+    border-color: rgba(255,255,255,0.2) !important;
+    background: rgba(255,255,255,0.01) !important;
+    cursor: default !important;
+}
+
+.btn--placeholder .btn-label {
+    color: rgba(255,255,255,0.3) !important;
+}
+
+/* Actions dots indicator */
+.actions-dots {
+    display: flex;
+    justify-content: center;
+    gap: clamp(4px, 0.6vw, 8px);
+    padding: clamp(8px, 1.2vh, 12px) 0;
+    position: relative;
+    top: -35px;
+}
+
+.actions-dots .dot {
+    width: clamp(6px, 0.9vw, 9px);
+    height: clamp(6px, 0.9vw, 9px);
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.actions-dots .dot.active {
+    background: rgba(255,255,255,0.8);
+    transform: scale(1.2);
 }
 
 /* BUTTON GRID */
@@ -526,7 +644,7 @@ body, html {
     grid-template-columns: auto auto;
     column-gap: clamp(84px, 14vw, 126px);
     row-gap: clamp(45px, 7.5vw, 67.5px);
-    margin: 18px 0 10px;
+    margin: -28px 0 -10px 0;
     padding: 10px 0;
     width: auto;
     max-width: none;
@@ -557,9 +675,10 @@ body, html {
     opacity: 0;
     transition: opacity 0.2s ease;
     pointer-events: none;
+    z-index: -1;
 }
 
-.btn:active { 
+.btn:active {
     transform: scale(0.97);
 }
 
@@ -1347,6 +1466,131 @@ body.playlist-style-icons .playlist-now-playing-container {
     align-items: center;
     width: 100%;
     padding: 0;
+}
+
+/* ============================================
+   FOOTER CAROUSEL (Volume Control)
+   ============================================ */
+.footer-carousel {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-track {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+.footer-track::-webkit-scrollbar {
+    display: none;
+}
+
+.footer-page {
+    min-width: 100%;
+    width: 100%;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+}
+
+/* Large Volume Control (Page 2) */
+.footer-page-volume {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(10px, 1.5vh, 20px) 5vw;
+}
+
+.volume-large-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(10px, 1.5vw, 20px);
+    width: 100%;
+    max-width: 600px;
+}
+
+.volume-large-icon {
+    width: clamp(20px, 3vw, 40px);
+    height: clamp(20px, 3vw, 40px);
+    color: rgba(255,255,255,0.7);
+}
+
+.volume-large-slider-wrap {
+    position: relative;
+    width: 100%;
+    height: clamp(30px, 4vw, 60px);
+    display: flex;
+    align-items: center;
+}
+
+.volume-large-track {
+    position: absolute;
+    width: 100%;
+    height: clamp(12px, 1.8vw, 24px);
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.volume-large-fill {
+    height: 100%;
+    width: 60%;
+    background: linear-gradient(90deg, var(--gold), rgba(230, 190, 138, 0.8));
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(230, 190, 138, 0.5);
+    transition: width 0.15s ease;
+}
+
+.volume-input-large {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    -webkit-appearance: none;
+    z-index: 2;
+}
+
+.volume-large-percent {
+    font-size: clamp(16px, 2.5vw, 32px);
+    font-weight: 300;
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    min-width: clamp(40px, 6vw, 80px);
+}
+
+/* Footer dots indicator */
+.footer-dots {
+    display: flex;
+    justify-content: center;
+    gap: clamp(4px, 0.6vw, 8px);
+    padding: clamp(4px, 0.6vh, 8px) 0;
+}
+
+.footer-dots .dot {
+    width: clamp(6px, 0.9vw, 9px);
+    height: clamp(6px, 0.9vw, 9px);
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.footer-dots .dot.active {
+    background: rgba(255,255,255,0.8);
+    transform: scale(1.2);
 }
 
 /* Left section: Album Art + Track Info */

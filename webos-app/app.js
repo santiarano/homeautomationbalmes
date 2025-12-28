@@ -763,7 +763,8 @@ async function updateMediaPlayer() {
             } else if (activeMediaSource === APPLETV_ENTITY) {
                 sourceName = 'Apple TV';
             }
-            document.getElementById('speaker-info').textContent = sourceName;
+            const speakerInfo = document.getElementById('speaker-info');
+            if (speakerInfo) speakerInfo.textContent = sourceName;
             
             // Detect TV mode (Apple TV or TV source on Sonos)
             const isTVMode = activeMediaSource === APPLETV_ENTITY || 
@@ -803,7 +804,8 @@ async function updateMediaPlayer() {
             document.getElementById('album').textContent = '';
             document.getElementById('artist').textContent = '';
             document.getElementById('playlist').textContent = '';
-            document.getElementById('speaker-info').textContent = 'Offline';
+            const speakerInfo = document.getElementById('speaker-info');
+            if (speakerInfo) speakerInfo.textContent = 'Offline';
             document.getElementById('shuffle-btn').classList.remove('active');
             stopLyrics();
         }
@@ -877,22 +879,40 @@ async function adjustVolume(delta) {
 function updateVolumeUI(volumeLevel) {
     const volumePercent = Math.round(volumeLevel * 100);
     
-    // Update text display
+    // Update text display (small)
     const volumeText = document.getElementById('volume');
     if (volumeText) {
         volumeText.textContent = volumePercent;
     }
     
-    // Update fill bar
+    // Update text display (large)
+    const volumeLargeText = document.getElementById('volume-large');
+    if (volumeLargeText) {
+        volumeLargeText.textContent = volumePercent;
+    }
+    
+    // Update fill bar (small)
     const volumeFill = document.getElementById('volume-fill');
     if (volumeFill) {
         volumeFill.style.width = `${volumePercent}%`;
     }
     
-    // Update slider input
+    // Update fill bar (large)
+    const volumeLargeFill = document.getElementById('volume-large-fill');
+    if (volumeLargeFill) {
+        volumeLargeFill.style.width = `${volumePercent}%`;
+    }
+    
+    // Update slider input (small)
     const volumeInput = document.getElementById('volume-input');
     if (volumeInput) {
         volumeInput.value = volumePercent;
+    }
+    
+    // Update slider input (large)
+    const volumeInputLarge = document.getElementById('volume-input-large');
+    if (volumeInputLarge) {
+        volumeInputLarge.value = volumePercent;
     }
 }
 
@@ -1561,6 +1581,219 @@ document.addEventListener('visibilitychange', function() {
 });
 
 // ============================================
+// FOOTER CAROUSEL (Drag Scroll)
+// ============================================
+
+// Reusable drag scroll function using Pointer Events (works on webOS)
+function enableDragScroll(el, opts = {}) {
+    if (!el) return;
+    
+    // Remove existing listeners if any
+    if (el.dataset.dragScrollAttached === 'true') {
+        return; // Already attached
+    }
+    
+    const {
+        axis = 'x',
+        snapToPages = false,
+        ignoreSelector = null,
+        onIndexChange = null
+    } = opts;
+    
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let currentIndex = 0;
+    
+    const pDown = (e) => {
+        // Ignore if clicking on ignored elements
+        if (ignoreSelector && e.target.closest(ignoreSelector)) {
+            return;
+        }
+        
+        // Only handle horizontal drags
+        if (axis === 'x') {
+            isDown = true;
+            if (el.setPointerCapture) {
+                el.setPointerCapture(e.pointerId);
+            }
+            startX = e.pageX - el.getBoundingClientRect().left;
+            scrollLeft = el.scrollLeft;
+            el.style.cursor = 'grabbing';
+            e.stopPropagation();
+        }
+    };
+    
+    const pMove = (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const x = e.pageX - el.getBoundingClientRect().left;
+        const walk = (x - startX) * 1.5; // Scroll speed multiplier
+        el.scrollLeft = scrollLeft - walk;
+    };
+    
+    const pUp = (e) => {
+        if (!isDown) return;
+        isDown = false;
+        if (el.releasePointerCapture) {
+            el.releasePointerCapture(e.pointerId);
+        }
+        el.style.cursor = 'grab';
+        
+        if (snapToPages) {
+            const pageWidth = el.clientWidth;
+            const scrollPos = el.scrollLeft;
+            const newIndex = Math.round(scrollPos / pageWidth);
+            const targetScroll = newIndex * pageWidth;
+            
+            el.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+            
+            if (newIndex !== currentIndex) {
+                currentIndex = newIndex;
+                if (onIndexChange) onIndexChange(newIndex);
+            }
+        }
+    };
+    
+    const pCancel = (e) => {
+        isDown = false;
+        if (el.releasePointerCapture) {
+            el.releasePointerCapture(e.pointerId);
+        }
+        el.style.cursor = 'grab';
+    };
+    
+    // Use capture phase to ensure events are captured
+    el.addEventListener('pointerdown', pDown, true);
+    el.addEventListener('pointermove', pMove, true);
+    el.addEventListener('pointerup', pUp, true);
+    el.addEventListener('pointercancel', pCancel, true);
+    
+    el.style.cursor = 'grab';
+    el.dataset.dragScrollAttached = 'true';
+}
+
+// Initialize footer carousel
+function initFooterCarousel() {
+    const track = document.getElementById('footer-track');
+    const dots = document.getElementById('footer-dots');
+    
+    if (!track || !dots) return;
+    
+    let currentIndex = 0;
+    
+    const updateDots = (index) => {
+        const dotElements = dots.querySelectorAll('.dot');
+        dotElements.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    };
+    
+    // Enable drag scroll with page snapping
+    enableDragScroll(track, {
+        axis: 'x',
+        snapToPages: true,
+        ignoreSelector: 'input[type="range"]', // Prevent slider drag from scrolling carousel
+        onIndexChange: (index) => {
+            currentIndex = index;
+            updateDots(index);
+        }
+    });
+    
+    // Dot click handlers
+    const dotElements = dots.querySelectorAll('.dot');
+    dotElements.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const pageWidth = track.clientWidth;
+            track.scrollTo({
+                left: index * pageWidth,
+                behavior: 'smooth'
+            });
+            currentIndex = index;
+            updateDots(index);
+        });
+    });
+    
+    // Update dots on scroll (for manual scrolling)
+    track.addEventListener('scroll', () => {
+        const pageWidth = track.clientWidth;
+        const scrollPos = track.scrollLeft;
+        const newIndex = Math.round(scrollPos / pageWidth);
+        if (newIndex !== currentIndex) {
+            currentIndex = newIndex;
+            updateDots(newIndex);
+        }
+    });
+}
+
+// Initialize actions carousel
+function initActionsCarousel() {
+    const trackWrapper = document.querySelector('.actions-track-wrapper');
+    const track = document.getElementById('actions-track');
+    const dots = document.getElementById('actions-dots');
+    
+    if (!trackWrapper || !track || !dots) return;
+    
+    let currentIndex = 0;
+    
+    const updateDots = (index) => {
+        const dotElements = dots.querySelectorAll('.dot');
+        dotElements.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    };
+    
+    // Enable drag scroll with page snapping on the wrapper
+    // Note: We don't ignore buttons here because we want to allow dragging on buttons to scroll
+    // Quick taps will still trigger button clicks, while drags will scroll the carousel
+    enableDragScroll(trackWrapper, {
+        axis: 'x',
+        snapToPages: true,
+        onIndexChange: (index) => {
+            currentIndex = index;
+            updateDots(index);
+        }
+    });
+    
+    // Dot click handlers
+    const dotElements = dots.querySelectorAll('.dot');
+    dotElements.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const pageWidth = trackWrapper.clientWidth;
+            trackWrapper.scrollTo({
+                left: index * pageWidth,
+                behavior: 'smooth'
+            });
+            currentIndex = index;
+            updateDots(index);
+        });
+    });
+    
+    // Update dots on scroll (for manual scrolling)
+    trackWrapper.addEventListener('scroll', () => {
+        const pageWidth = trackWrapper.clientWidth;
+        const scrollPos = trackWrapper.scrollLeft;
+        const newIndex = Math.round(scrollPos / pageWidth);
+        if (newIndex !== currentIndex) {
+            currentIndex = newIndex;
+            updateDots(newIndex);
+        }
+    });
+}
+
+// ============================================
 // INITIALIZATION
 // ============================================
 
@@ -1640,6 +1873,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     updateWeather();
     updateSonos();
+    
+    // Initialize carousels after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        initFooterCarousel();
+        initActionsCarousel();
+    }, 100);
     
     // Fetch playlists after initial media player update
     setTimeout(() => {

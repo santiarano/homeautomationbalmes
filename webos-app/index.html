@@ -113,37 +113,63 @@
 
             <div class="divider"></div>
 
-            <div class="button-grid">
-                <!-- Left column (gold halo) -->
-                <div class="btn btn--gold" onclick="triggerHA('automation', 'awning_up')">
-                    <div class="btn-inner">
-                        <img class="btn-icon" src="Icons/open awning_gold.png" alt="Open Awning">
-                        <div class="btn-label">Open<br>Awning</div>
-                </div>
-                </div>
+            <!-- Actions Carousel -->
+            <div class="actions-carousel" id="actions-carousel">
+                <div class="actions-track-wrapper">
+                    <div class="actions-track" id="actions-track">
+                    <!-- Page 1: Main Actions -->
+                    <div class="actions-page actions-page-main">
+                        <div class="button-grid">
+                            <!-- Left column (gold halo) -->
+                            <div class="btn btn--gold" onclick="triggerHA('automation', 'awning_up')">
+                                <div class="btn-inner">
+                                    <img class="btn-icon" src="Icons/open awning_gold.png" alt="Open Awning">
+                                    <div class="btn-label">Open<br>Awning</div>
+                                </div>
+                            </div>
 
-                <!-- Right column (silver halo) -->
-                <div class="btn btn--silver" onclick="triggerHA('automation', 'awning_down')">
-                    <div class="btn-inner">
-                        <img class="btn-icon" src="Icons/close awning_white.png" alt="Close Awning">
-                        <div class="btn-label">Close<br>Awning</div>
-                </div>
-                </div>
+                            <!-- Right column (silver halo) -->
+                            <div class="btn btn--silver" onclick="triggerHA('automation', 'awning_down')">
+                                <div class="btn-inner">
+                                    <img class="btn-icon" src="Icons/close awning_white.png" alt="Close Awning">
+                                    <div class="btn-label">Close<br>Awning</div>
+                                </div>
+                            </div>
 
-                <!-- Left column (gold halo) - Movie Time -->
-                <div class="btn btn--gold" onclick="triggerHA('script', 'turn_tv_on')">
-                    <div class="btn-inner">
-                        <img class="btn-icon" src="Icons/movie_time.png" alt="Movie Time">
-                        <div class="btn-label">Movie<br>Time</div>
-            </div>
-                </div>
+                            <!-- Left column (gold halo) - Movie Time -->
+                            <div class="btn btn--gold" onclick="triggerHA('script', 'turn_tv_on')">
+                                <div class="btn-inner">
+                                    <img class="btn-icon" src="Icons/movie_time.png" alt="Movie Time">
+                                    <div class="btn-label">Movie<br>Time</div>
+                                </div>
+                            </div>
 
-                <!-- Right column (silver halo) - End Show -->
-                <div class="btn btn--silver" onclick="triggerHA('script', 'turn_tv_off')">
-                    <div class="btn-inner">
-                        <img class="btn-icon" src="Icons/end_show.png" alt="End Show">
-                        <div class="btn-label">End<br>Show</div>
+                            <!-- Right column (silver halo) - End Show -->
+                            <div class="btn btn--silver" onclick="triggerHA('script', 'turn_tv_off')">
+                                <div class="btn-inner">
+                                    <img class="btn-icon" src="Icons/end_show.png" alt="End Show">
+                                    <div class="btn-label">End<br>Show</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Page 2: Placeholder for future content -->
+                    <div class="actions-page actions-page-empty">
+                        <div class="button-grid button-grid--placeholder">
+                            <div class="btn btn--placeholder"><div class="btn-inner"><div class="btn-label">Coming<br>Soon</div></div></div>
+                            <div class="btn btn--placeholder"><div class="btn-inner"><div class="btn-label">Coming<br>Soon</div></div></div>
+                            <div class="btn btn--placeholder"><div class="btn-inner"><div class="btn-label">Coming<br>Soon</div></div></div>
+                            <div class="btn btn--placeholder"><div class="btn-inner"><div class="btn-label">Coming<br>Soon</div></div></div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Navigation dots -->
+                <div class="actions-dots" id="actions-dots">
+                    <span class="dot active" data-index="0"></span>
+                    <span class="dot" data-index="1"></span>
                 </div>
             </div>
 
@@ -180,63 +206,91 @@
 
         <div class="music-player">
             <div class="player-content">
-                <!-- Album+Info (Left), Controls (Center), Volume (Right) -->
-                <div class="player-middle-row">
-                    <!-- Album Art + Track Info (Left) -->
-                    <div class="player-left">
-                        <div class="mini-album-art" id="mini-album-art">
-                            <img id="mini-album-img" src="" alt="Album Art">
-                            <div class="mini-album-placeholder" id="mini-album-placeholder">🎵</div>
-                        </div>
-                    <div class="track-info">
-            <div class="track-title" id="song">Waiting for Sonos...</div>
-                        <div class="album-name" id="album">Sunset Lounge</div>
-                        <div class="artist-name" id="artist">Connecting...</div>
-                        <div class="playlist-name" id="playlist"></div>
-                        </div>
-            </div>
+                <!-- Footer carousel: Page 1 = normal footer, Page 2 = large volume -->
+                <div class="footer-carousel" id="footer-carousel">
+                    <div class="footer-track" id="footer-track">
+                        <!-- Page 1 -->
+                        <div class="footer-page footer-page-main">
+                            <!-- Album+Info (Left), Controls (Center), Volume (Right) -->
+                            <div class="player-middle-row">
+                                <!-- Album Art + Track Info (Left) -->
+                                <div class="player-left">
+                                    <div class="mini-album-art" id="mini-album-art">
+                                        <img id="mini-album-img" src="" alt="Album Art">
+                                        <div class="mini-album-placeholder" id="mini-album-placeholder">🎵</div>
+                                    </div>
+                                    <div class="track-info">
+                                        <div class="track-title" id="song">Waiting for Sonos...</div>
+                                        <div class="album-name" id="album">Sunset Lounge</div>
+                                        <div class="artist-name" id="artist">Connecting...</div>
+                                        <div class="playlist-name" id="playlist"></div>
+                                    </div>
+                                </div>
 
-                    <!-- Playback Controls (Center) -->
-                    <div class="playback-controls">
-                        <div class="control-btn" onclick="sonos('previous')">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-                            </svg>
+                                <!-- Playback Controls (Center) -->
+                                <div class="playback-controls">
+                                    <div class="control-btn" onclick="sonos('previous')">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="control-btn play-pause-btn" onclick="sonos('toggle')" id="play-btn">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="control-btn" onclick="sonos('next')">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="control-btn shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Volume Bar (Right) -->
+                                <div class="volume-bar-container">
+                                    <svg class="volume-icon" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                    </svg>
+                                    <div class="volume-slider-wrap">
+                                        <div class="volume-track">
+                                            <div class="volume-fill" id="volume-fill"></div>
+                                        </div>
+                                        <input type="range" class="volume-input" id="volume-input" min="0" max="100" value="60" oninput="setVolume(this.value)">
+                                    </div>
+                                    <span class="volume-percent" id="volume">60</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="control-btn play-pause-btn" onclick="sonos('toggle')" id="play-btn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
-                        <div class="control-btn" onclick="sonos('next')">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M6 18l8.5-6L6 6zM16 6h2v12h-2z"/>
-                            </svg>
-                        </div>
-                        <div class="control-btn shuffle-btn" id="shuffle-btn" onclick="toggleShuffle()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
-                            </svg>
+
+                        <!-- Page 2: Large Volume Control -->
+                        <div class="footer-page footer-page-volume">
+                            <div class="volume-large-container">
+                                <svg class="volume-large-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                </svg>
+                                <div class="volume-large-slider-wrap">
+                                    <div class="volume-large-track">
+                                        <div class="volume-large-fill" id="volume-large-fill"></div>
+                                    </div>
+                                    <input type="range" class="volume-input-large" id="volume-input-large" min="0" max="100" value="60" oninput="setVolume(this.value)">
+                                </div>
+                                <span class="volume-large-percent" id="volume-large">60</span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Volume Bar (Right) -->
-                    <div class="volume-bar-container">
-                        <svg class="volume-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                        </svg>
-                        <div class="volume-slider-wrap">
-                            <div class="volume-track">
-                                <div class="volume-fill" id="volume-fill"></div>
-                            </div>
-                            <input type="range" class="volume-input" id="volume-input" min="0" max="100" value="60" oninput="setVolume(this.value)">
-                        </div>
-                        <span class="volume-percent" id="volume">60</span>
+                    <!-- Dots indicator -->
+                    <div class="footer-dots" id="footer-dots">
+                        <span class="dot active" data-index="0"></span>
+                        <span class="dot" data-index="1"></span>
                     </div>
                 </div>
             </div>
-
-            <div class="speaker-name" id="speaker-info">Sonos</div>
         </div>
     </div>
 
