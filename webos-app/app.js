@@ -8,9 +8,11 @@
 let settings = {
     showLyrics: true,
     backgroundDarkness: 0,
-    playerLayout: 'classic' // 'classic' or 'cinematic'
+    playerLayout: 'classic', // 'classic' or 'cinematic'
+    playlistStyle: 'artwork' // 'artwork' or 'icons'
 };
 const SETTINGS_KEY = 'standbyme_settings';
+let cachedPlaylists = []; // Store playlists for re-rendering when style changes
 
 // Open settings modal
 function openSettings() {
@@ -56,6 +58,18 @@ function setLayout(layout) {
     } catch (e) {}
 }
 
+function setPlaylistStyle(style) {
+    settings.playlistStyle = style;
+    applySettings();
+    // Re-render playlists with new style
+    if (cachedPlaylists && cachedPlaylists.length > 0) {
+        renderPlaylists(cachedPlaylists);
+    }
+    try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch (e) {}
+}
+
 // Apply current settings to UI
 function applySettings() {
     // Lyrics toggle
@@ -96,6 +110,22 @@ function applySettings() {
         body.classList.add('layout-classic');
         if (classicOption) classicOption.classList.add('active');
         if (cinematicOption) cinematicOption.classList.remove('active');
+    }
+    
+    // Playlist style
+    const artworkOption = document.getElementById('playlist-style-artwork');
+    const iconsOption = document.getElementById('playlist-style-icons');
+    
+    body.classList.remove('playlist-style-artwork', 'playlist-style-icons');
+    
+    if (settings.playlistStyle === 'icons') {
+        body.classList.add('playlist-style-icons');
+        if (artworkOption) artworkOption.classList.remove('active');
+        if (iconsOption) iconsOption.classList.add('active');
+    } else {
+        body.classList.add('playlist-style-artwork');
+        if (artworkOption) artworkOption.classList.add('active');
+        if (iconsOption) iconsOption.classList.remove('active');
     }
 }
 
@@ -1103,10 +1133,60 @@ function toPastel(r, g, b) {
     return `rgba(${mutedR}, ${mutedG}, ${mutedB}, 0.5)`;
 }
 
-// Render playlist carousel
+// Playlist icon mapping (name to icon file) with keywords for fuzzy matching
+const PLAYLIST_ICONS = [
+    { keywords: ['perfect', 'mood'], icon: 'perfect_mood.png' },
+    { keywords: ['dance', 'dancing'], icon: 'dance.png' },
+    { keywords: ['hard', 'life'], icon: 'its_a_hard_life.png' },
+    { keywords: ['nostalgic', 'nostalgia'], icon: 'nostalgic.png' },
+    { keywords: ['soft', 'jazz'], icon: 'soft_jazz.png' },
+    { keywords: ['jazz'], icon: 'soft_jazz.png' },
+    { keywords: ['skiing', 'ski', 'ultimate'], icon: 'the_ultimate_skiing_playlist.png' },
+    { keywords: ['work', 'drive'], icon: 'work_drive.png' },
+    { keywords: ['driving'], icon: 'work_drive.png' }
+];
+
+// Playlist tile colors for icon style (muted sophisticated palette)
+const TILE_COLORS = [
+    'tile-color-charcoal',
+    'tile-color-orange', 
+    'tile-color-teal',
+    'tile-color-purple',
+    'tile-color-slate',
+    'tile-color-navy',
+    'tile-color-olive',
+    'tile-color-rose',
+    'tile-color-brown',
+    'tile-color-steel'
+];
+
+// Get icon file for a playlist name (fuzzy matching)
+function getPlaylistIcon(name) {
+    const normalized = name.toLowerCase().trim();
+    
+    // Try to find a matching icon using keywords
+    for (const entry of PLAYLIST_ICONS) {
+        const matchCount = entry.keywords.filter(kw => normalized.includes(kw)).length;
+        if (matchCount >= 1) {
+            return entry.icon;
+        }
+    }
+    
+    return null;
+}
+
+// Get color class for a playlist based on its index
+function getPlaylistColorClass(index) {
+    return TILE_COLORS[index % TILE_COLORS.length];
+}
+
+// Render playlist carousel (artwork style)
 async function renderPlaylistCarousel() {
     const carousel = document.getElementById('playlist-carousel');
     if (!carousel) return;
+    
+    // Cache playlists for style switching
+    cachedPlaylists = [...spotifyPlaylists];
     
     if (spotifyPlaylists.length === 0) {
         showPlaylistEmptyState();
@@ -1148,14 +1228,192 @@ async function renderPlaylistCarousel() {
         
         carousel.appendChild(tile);
     }
+    
+    // Also render the icon-style grid
+    renderPlaylistGrid();
+}
+
+// Render playlist grid (icon style - 2 rows with horizontal scroll)
+function renderPlaylistGrid() {
+    const grid = document.getElementById('playlist-grid');
+    const nowPlayingContainer = document.getElementById('playlist-now-playing');
+    
+    if (!grid || !nowPlayingContainer) return;
+    
+    if (cachedPlaylists.length === 0) {
+        grid.innerHTML = '<div class="playlist-carousel-loading">No playlists found</div>';
+        nowPlayingContainer.innerHTML = '';
+        return;
+    }
+    
+    grid.innerHTML = '';
+    nowPlayingContainer.innerHTML = '';
+    
+    // Find the currently playing playlist
+    let nowPlayingPlaylist = null;
+    let otherPlaylists = [];
+    
+    for (const playlist of cachedPlaylists) {
+        if (currentPlayingPlaylistId && playlist.id === currentPlayingPlaylistId) {
+            nowPlayingPlaylist = playlist;
+        } else {
+            otherPlaylists.push(playlist);
+        }
+    }
+    
+    // If no now playing, use the first playlist for the hero tile
+    if (!nowPlayingPlaylist && cachedPlaylists.length > 0) {
+        nowPlayingPlaylist = cachedPlaylists[0];
+        otherPlaylists = cachedPlaylists.slice(1);
+    }
+    
+    // Render all regular tiles (scrollable, no limit)
+    let colorIndex = 0;
+    for (const playlist of otherPlaylists) {
+        const tile = createIconTile(playlist, colorIndex);
+        grid.appendChild(tile);
+        colorIndex++;
+    }
+    
+    // Render Now Playing tile in its fixed container
+    if (nowPlayingPlaylist) {
+        const nowPlayingTile = createNowPlayingTile(nowPlayingPlaylist);
+        nowPlayingContainer.appendChild(nowPlayingTile);
+    }
+}
+
+// Icons that need to be smaller (tall icons that get cut off)
+const SMALLER_ICONS = ['hard', 'life'];
+
+function needsSmallerIcon(title) {
+    const normalized = title.toLowerCase();
+    return SMALLER_ICONS.some(kw => normalized.includes(kw));
+}
+
+// Create an icon-style tile
+function createIconTile(playlist, colorIndex) {
+    const tile = document.createElement('div');
+    tile.className = `playlist-grid-tile ${getPlaylistColorClass(colorIndex)}`;
+    tile.dataset.playlistId = playlist.id;
+    // Store playlist data for click handler
+    tile.dataset.playlistTitle = playlist.title;
+    tile.dataset.playlistContentType = playlist.contentType || 'playlist';
+    
+    const iconFile = getPlaylistIcon(playlist.title);
+    const iconSrc = iconFile ? `Icons/playlists/${iconFile}` : null;
+    const smallerClass = needsSmallerIcon(playlist.title) ? ' icon-smaller' : '';
+    
+    // If no matching icon, use artwork with overlay as fallback
+    let iconHtml;
+    if (iconSrc) {
+        iconHtml = `<div class="tile-icon${smallerClass}"><img src="${iconSrc}" alt="" onerror="this.parentElement.innerHTML='<span class=\\'fallback-icon\\'>♪</span>'"></div>`;
+    } else if (playlist.thumbnail) {
+        // Use artwork with semi-transparent overlay
+        const thumbUrl = playlist.thumbnail.startsWith('/') ? 'http://' + HA_IP + playlist.thumbnail : playlist.thumbnail;
+        iconHtml = `<div class="tile-icon"><img src="${thumbUrl}" alt="" style="border-radius: 4px; opacity: 0.7;" onerror="this.parentElement.innerHTML='<span class=\\'fallback-icon\\'>♪</span>'"></div>`;
+    } else {
+        iconHtml = `<div class="tile-icon"><span class="fallback-icon">♪</span></div>`;
+    }
+    
+    tile.innerHTML = `
+        ${iconHtml}
+        <div class="tile-label"><span class="label-text">${playlist.title}</span></div>
+    `;
+    
+    // Use a direct reference to avoid closure issues
+    const playlistToPlay = { ...playlist };
+    tile.addEventListener('click', (e) => {
+        e.stopPropagation();
+        console.log('Tile clicked:', playlistToPlay.title, playlistToPlay.id);
+        playPlaylist(playlistToPlay);
+    });
+    
+    // Check if text overflows and enable marquee after a delay
+    setTimeout(() => {
+        const labelEl = tile.querySelector('.tile-label');
+        const textEl = tile.querySelector('.label-text');
+        if (labelEl && textEl) {
+            // Check if text overflows
+            if (textEl.scrollWidth > labelEl.offsetWidth) {
+                textEl.classList.add('needs-scroll');
+                
+                // Function to trigger one scroll animation
+                const triggerScroll = () => {
+                    textEl.classList.remove('marquee-active');
+                    void textEl.offsetWidth; // Force reflow
+                    textEl.classList.add('marquee-active');
+                    
+                    // Remove class after animation completes (6s)
+                    setTimeout(() => {
+                        textEl.classList.remove('marquee-active');
+                    }, 6000);
+                };
+                
+                // Initial scroll after 2 seconds
+                setTimeout(triggerScroll, 2000);
+                
+                // Then scroll once every 30 seconds
+                setInterval(triggerScroll, 30000);
+            } else {
+                textEl.classList.add('static');
+            }
+        }
+    }, 100);
+    
+    return tile;
+}
+
+// Create the Now Playing hero tile with split layout
+function createNowPlayingTile(playlist) {
+    const tile = document.createElement('div');
+    tile.className = `playlist-grid-tile now-playing`;
+    tile.dataset.playlistId = playlist.id;
+    
+    // Get artwork URL
+    const thumbUrl = playlist.thumbnail 
+        ? (playlist.thumbnail.startsWith('/') ? 'http://' + HA_IP + playlist.thumbnail : playlist.thumbnail)
+        : '';
+    
+    // Get artist/source if available
+    const artist = playlist.artist || 'Various';
+    
+    tile.innerHTML = `
+        <div class="now-playing-top">
+            <div class="now-playing-header">
+                <div class="tile-label-top">Now Playing</div>
+            </div>
+            <div class="tile-artwork-container">
+                <img class="tile-artwork-img" src="${thumbUrl}" alt="${playlist.title}">
+                <div class="tile-artwork-fade"></div>
+            </div>
+        </div>
+        <div class="now-playing-bottom">
+            <div class="tile-label">${playlist.title}</div>
+            <div class="tile-artist">${artist}</div>
+        </div>
+    `;
+    
+    // Use a direct reference to avoid closure issues
+    const playlistToPlay = { ...playlist };
+    tile.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playPlaylist(playlistToPlay);
+    });
+    
+    return tile;
 }
 
 // Show empty state
 function showPlaylistEmptyState() {
     const carousel = document.getElementById('playlist-carousel');
-    if (!carousel) return;
+    if (carousel) {
+        carousel.innerHTML = '<div class="playlist-carousel-loading">No playlists found</div>';
+    }
     
-    carousel.innerHTML = '<div class="playlist-carousel-loading">No playlists found</div>';
+    const grid = document.getElementById('playlist-grid');
+    if (grid) {
+        grid.innerHTML = '<div class="playlist-carousel-loading">No playlists found</div>';
+    }
 }
 
 // Play a playlist
@@ -1196,41 +1454,53 @@ async function playPlaylist(playlist) {
 // Update now playing indicator on tiles and move to first position
 function updatePlaylistNowPlaying(animate = false) {
     const carousel = document.getElementById('playlist-carousel');
-    if (!carousel) return;
     
-    const tiles = Array.from(document.querySelectorAll('.playlist-tile'));
-    let nowPlayingTile = null;
-    
-    tiles.forEach(tile => {
-        if (tile.dataset.playlistId === currentPlayingPlaylistId) {
-            tile.classList.add('now-playing');
-            nowPlayingTile = tile;
-        } else {
-            tile.classList.remove('now-playing');
-        }
-    });
-    
-    // Move now playing tile to first position
-    if (nowPlayingTile && nowPlayingTile !== tiles[0]) {
-        if (animate) {
-            // Add animation class
-            nowPlayingTile.classList.add('moving-to-first');
-            
-            // Move after a brief delay for visual effect
-            setTimeout(() => {
-                carousel.insertBefore(nowPlayingTile, carousel.firstChild);
-                carousel.scrollTo({ left: 0, behavior: 'smooth' });
+    // Update carousel (artwork style)
+    if (carousel) {
+        const tiles = Array.from(document.querySelectorAll('.playlist-tile'));
+        let nowPlayingTile = null;
+        
+        tiles.forEach(tile => {
+            if (tile.dataset.playlistId === currentPlayingPlaylistId) {
+                tile.classList.add('now-playing');
+                nowPlayingTile = tile;
+            } else {
+                tile.classList.remove('now-playing');
+            }
+        });
+        
+        // Move now playing tile to first position
+        if (nowPlayingTile && nowPlayingTile !== tiles[0]) {
+            if (animate) {
+                // Add animation class
+                nowPlayingTile.classList.add('moving-to-first');
                 
-                // Remove animation class after animation completes
+                // Move after a brief delay for visual effect
                 setTimeout(() => {
-                    nowPlayingTile.classList.remove('moving-to-first');
-                }, 500);
-            }, 100);
-        } else {
-            // Move immediately without animation (for initial load)
-            carousel.insertBefore(nowPlayingTile, carousel.firstChild);
+                    carousel.insertBefore(nowPlayingTile, carousel.firstChild);
+                    carousel.scrollTo({ left: 0, behavior: 'smooth' });
+                    
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        nowPlayingTile.classList.remove('moving-to-first');
+                    }, 500);
+                }, 100);
+            } else {
+                // Move immediately without animation (for initial load)
+                carousel.insertBefore(nowPlayingTile, carousel.firstChild);
+            }
         }
     }
+    
+    // Re-render grid (icon style) when now playing changes
+    renderPlaylistGrid();
+}
+
+// Helper function to re-render playlists (called when style changes)
+function renderPlaylists(playlists) {
+    cachedPlaylists = playlists;
+    spotifyPlaylists = playlists;
+    renderPlaylistCarousel();
 }
 
 // Detect currently playing playlist from media player state

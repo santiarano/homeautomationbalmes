@@ -60,6 +60,24 @@
                     </div>
                 </div>
             </div>
+
+            <div class="setting-item">
+                <span class="setting-label">Playlist Style</span>
+                <div class="layout-selector">
+                    <div class="layout-option" id="playlist-style-artwork" onclick="setPlaylistStyle('artwork')">
+                        <div class="layout-preview playlist-preview-artwork">
+                            <div class="pp-img"></div>
+                        </div>
+                        <span>Artwork</span>
+                    </div>
+                    <div class="layout-option" id="playlist-style-icons" onclick="setPlaylistStyle('icons')">
+                        <div class="layout-preview playlist-preview-icons">
+                            <div class="pp-icon">♪</div>
+                        </div>
+                        <span>Icons</span>
+                    </div>
+                </div>
+            </div>
             
             <button class="settings-close" onclick="closeSettings()">Done</button>
         </div>
@@ -117,7 +135,7 @@
                     <div class="btn-inner">
                         <img class="btn-icon" src="Icons/movie_time.png" alt="Movie Time">
                         <div class="btn-label">Movie<br>Time</div>
-                    </div>
+            </div>
                 </div>
 
                 <!-- Right column (silver halo) - End Show -->
@@ -132,18 +150,33 @@
             <div class="divider"></div>
         </div>
 
-        <!-- Playlist Carousel (replaces floating album art) -->
+        <!-- Playlist Carousel - Artwork Style -->
         <div class="playlist-carousel-wrapper">
             <div class="playlist-carousel" id="playlist-carousel">
                 <!-- Playlist tiles will be dynamically inserted here -->
             </div>
+            </div>
+            
+        <!-- Playlist Grid - Icons Style (2-row layout) -->
+        <div class="playlist-grid-wrapper">
+            <div class="playlist-grid-container">
+                <div class="playlist-grid-scroll">
+                    <div class="playlist-grid" id="playlist-grid">
+                        <!-- Playlist grid tiles will be dynamically inserted here -->
+                    </div>
+                </div>
+                <div class="playlist-grid-separator"></div>
+                <div class="playlist-now-playing-container" id="playlist-now-playing">
+                    <!-- Now Playing tile will be dynamically inserted here -->
+                </div>
+            </div>
         </div>
         
         <!-- Lyrics Display -->
-        <div class="lyrics-container" id="lyrics-container">
-            <div class="lyrics-line lyrics-current" id="lyrics-current"></div>
-            <div class="lyrics-line lyrics-next" id="lyrics-next"></div>
-        </div>
+            <div class="lyrics-container" id="lyrics-container">
+                <div class="lyrics-line lyrics-current" id="lyrics-current"></div>
+                <div class="lyrics-line lyrics-next" id="lyrics-next"></div>
+            </div>
 
         <div class="music-player">
             <div class="player-content">
@@ -155,13 +188,13 @@
                             <img id="mini-album-img" src="" alt="Album Art">
                             <div class="mini-album-placeholder" id="mini-album-placeholder">🎵</div>
                         </div>
-                        <div class="track-info">
-                            <div class="track-title" id="song">Waiting for Sonos...</div>
-                            <div class="album-name" id="album">Sunset Lounge</div>
-                            <div class="artist-name" id="artist">Connecting...</div>
-                            <div class="playlist-name" id="playlist"></div>
+                    <div class="track-info">
+            <div class="track-title" id="song">Waiting for Sonos...</div>
+                        <div class="album-name" id="album">Sunset Lounge</div>
+                        <div class="artist-name" id="artist">Connecting...</div>
+                        <div class="playlist-name" id="playlist"></div>
                         </div>
-                    </div>
+            </div>
 
                     <!-- Playback Controls (Center) -->
                     <div class="playback-controls">
