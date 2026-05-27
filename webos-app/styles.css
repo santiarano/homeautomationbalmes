@@ -2010,6 +2010,189 @@ body.playlist-style-icons .playlist-now-playing-container {
 }
 
 /* ============================================
+   IPAD NATIVE SHELL
+   ============================================ */
+html.ipad-shell,
+html.ipad-shell body {
+    height: 100dvh;
+    overflow: hidden;
+}
+
+html.ipad-shell .container {
+    height: 100dvh;
+    overflow: hidden;
+    padding: max(10px, env(safe-area-inset-top)) 20px 245px;
+    justify-content: flex-start;
+}
+
+html.ipad-shell .top-right {
+    top: max(22px, calc(env(safe-area-inset-top) + 12px));
+    right: 28px;
+}
+
+html.ipad-shell .clock {
+    font-size: clamp(18px, 2.3vw, 30px);
+}
+
+html.ipad-shell .settings-btn {
+    width: clamp(22px, 2.5vw, 30px);
+    height: clamp(22px, 2.5vw, 30px);
+}
+
+html.ipad-shell .weather-section {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+html.ipad-shell .wx-icon {
+    width: clamp(210px, 36vw, 290px);
+    margin-top: 0;
+}
+
+html.ipad-shell .temp {
+    font-size: clamp(58px, 9vw, 88px);
+    margin-top: -12px;
+}
+
+html.ipad-shell .condition {
+    font-size: clamp(15px, 2.6vw, 20px);
+    margin-top: 4px;
+}
+
+html.ipad-shell .temp-details {
+    font-size: clamp(14px, 2.6vw, 19px);
+    margin-top: 8px;
+    gap: 8px;
+}
+
+html.ipad-shell .divider {
+    margin: 12px auto;
+    width: min(84vw, 860px);
+}
+
+html.ipad-shell .actions-carousel {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+html.ipad-shell .actions-track-wrapper,
+html.ipad-shell .divider + .actions-carousel .actions-track-wrapper {
+    padding: 24px 0 10px;
+    margin: -24px 0 -8px;
+    min-height: auto;
+}
+
+html.ipad-shell .button-grid {
+    column-gap: clamp(54px, 10vw, 92px);
+    row-gap: clamp(18px, 3vw, 30px);
+    margin: 0;
+    padding: 8px 0;
+}
+
+html.ipad-shell .btn {
+    width: clamp(145px, 26vw, 190px);
+    height: clamp(145px, 26vw, 190px);
+    border-width: 4px;
+}
+
+html.ipad-shell .btn::before {
+    inset: -12px;
+}
+
+html.ipad-shell .btn-icon,
+html.ipad-shell .btn-icon-svg {
+    width: clamp(48px, 8vw, 66px);
+    height: clamp(48px, 8vw, 66px);
+}
+
+html.ipad-shell .btn-label {
+    font-size: clamp(12px, 2vw, 16px);
+    letter-spacing: 0.12em;
+}
+
+html.ipad-shell .actions-dots {
+    top: -8px;
+    padding: 4px 0;
+}
+
+html.ipad-shell .actions-carousel + .divider {
+    display: none;
+}
+
+html.ipad-shell .playlist-carousel-wrapper {
+    bottom: clamp(210px, 18vh, 245px);
+    height: clamp(112px, 13vh, 138px);
+    z-index: 95;
+}
+
+html.ipad-shell .playlist-carousel {
+    gap: 14px;
+    padding: 0 5vw;
+}
+
+html.ipad-shell .playlist-tile {
+    width: clamp(112px, 18vw, 145px);
+    padding: 10px;
+    border-radius: 14px;
+}
+
+html.ipad-shell .playlist-tile-art {
+    width: clamp(68px, 10vw, 88px);
+    height: clamp(68px, 10vw, 88px);
+}
+
+html.ipad-shell .playlist-tile-title {
+    font-size: clamp(11px, 1.8vw, 15px);
+}
+
+html.ipad-shell .lyrics-container {
+    bottom: clamp(360px, 32vh, 420px);
+}
+
+html.ipad-shell .music-player {
+    min-height: 200px;
+    padding: 18px 5vw max(18px, env(safe-area-inset-bottom));
+}
+
+html.ipad-shell .mini-album-art {
+    width: clamp(92px, 13vw, 120px);
+    height: clamp(92px, 13vw, 120px);
+    margin-top: 18px;
+}
+
+html.ipad-shell .player-middle-row {
+    min-height: 142px;
+}
+
+html.ipad-shell .track-title {
+    font-size: clamp(20px, 3.2vw, 30px);
+}
+
+html.ipad-shell .album-name,
+html.ipad-shell .artist-name,
+html.ipad-shell .playlist-name {
+    font-size: clamp(13px, 2vw, 18px);
+}
+
+html.ipad-shell .playback-controls {
+    gap: clamp(18px, 3vw, 32px);
+}
+
+html.ipad-shell .play-pause-btn {
+    width: clamp(64px, 8.5vw, 86px);
+    height: clamp(64px, 8.5vw, 86px);
+}
+
+html.ipad-shell .volume-bar-container {
+    margin-top: 36px;
+    padding-left: 18px;
+}
+
+html.ipad-shell .volume-slider-wrap {
+    width: clamp(90px, 12vw, 140px);
+}
+
+/* ============================================
    CINEMATIC LAYOUT
    ============================================ */
 
@@ -2216,4 +2399,3 @@ body.layout-cinematic .lyrics-container {
     text-align: center;
     align-items: center;
 }
-

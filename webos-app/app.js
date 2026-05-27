@@ -2,6 +2,13 @@
 // StandByMe Dashboard - Main Application
 // ============================================
 
+const urlParams = new URLSearchParams(window.location.search);
+const isIPadShell = (urlParams.get('v') || '').includes('ipad') || urlParams.get('shell') === 'ipad';
+
+if (isIPadShell) {
+    document.documentElement.classList.add('ipad-shell');
+}
+
 // ============================================
 // GLOBAL SETTINGS (loaded from localStorage)
 // ============================================
@@ -1892,4 +1899,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // Refresh playlists every 10 minutes
     setInterval(fetchSpotifyPlaylists, 600000);
 });
-
