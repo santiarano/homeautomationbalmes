@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,7 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4EDF550EA37514842F73474A /* StandByMePad.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StandByMePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EDF550EA37514842F73474A /* StandByMePad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StandByMePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		53B45600A897F1F1B7B0E78D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		62F396759F6409B3D6CC95DB /* webos-app */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "webos-app"; sourceTree = SOURCE_ROOT; };
 		75ED108049A308C2BC340951 /* StandByMePadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandByMePadApp.swift; sourceTree = "<group>"; };
@@ -82,11 +82,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-					114FD96D448917495C5AD15A = {
-						DevelopmentTeam = "";
-					};
-				};
 			};
 			buildConfigurationList = 6DD33C32169BC7A2BEC0E41C /* Build configuration list for PBXProject "StandByMePad" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -98,7 +93,6 @@
 			);
 			mainGroup = B3DAECAD5772FEAE92AE4D2A;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -135,6 +129,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = VCF4UT25PL;
 				INFOPLIST_FILE = Sources/StandByMePad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -210,6 +205,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = VCF4UT25PL;
 				INFOPLIST_FILE = Sources/StandByMePad/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

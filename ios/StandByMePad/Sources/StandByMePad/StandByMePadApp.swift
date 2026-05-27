@@ -13,6 +13,8 @@ struct StandByMePadApp: App {
 }
 
 struct DashboardWebView: UIViewRepresentable {
+    private let dashboardURL = URL(string: "http://192.168.1.43:8123/local/standbyme-app/index.html?v=ipad")!
+
     func makeUIView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
         configuration.allowsInlineMediaPlayback = true
@@ -33,18 +35,6 @@ struct DashboardWebView: UIViewRepresentable {
     func updateUIView(_ webView: WKWebView, context: Context) {}
 
     private func loadDashboard(in webView: WKWebView) {
-        guard
-            let indexURL = Bundle.main.url(
-                forResource: "index",
-                withExtension: "html",
-                subdirectory: "webos-app"
-            )
-        else {
-            webView.loadHTMLString("<h1 style='color:white;background:black'>StandByMe files missing</h1>", baseURL: nil)
-            return
-        }
-
-        let webAppURL = indexURL.deletingLastPathComponent()
-        webView.loadFileURL(indexURL, allowingReadAccessTo: webAppURL)
+        webView.load(URLRequest(url: dashboardURL, cachePolicy: .reloadIgnoringLocalCacheData))
     }
 }

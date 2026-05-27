@@ -9,6 +9,8 @@
 # IDE
 .idea/
 .vscode/
+xcuserdata/
+*.xcuserstate
 *.swp
 *.swo
 
@@ -32,4 +34,3 @@ __pycache__/
 *.png
 !webos-app/Icons/*.png
 !webos-app/*.png
-
