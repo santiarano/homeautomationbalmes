@@ -13,6 +13,7 @@ if (isIPadShell) {
 // GLOBAL SETTINGS (loaded from localStorage)
 // ============================================
 let settings = {
+    dashboardDesign: 'original',
     showLyrics: true,
     backgroundDarkness: 0,
     playerLayout: 'classic', // 'classic' or 'cinematic'
@@ -77,8 +78,40 @@ function setPlaylistStyle(style) {
     } catch (e) {}
 }
 
+function setDashboardDesign(design) {
+    settings.dashboardDesign = design === 'original' ? 'original' : 'glass';
+    applySettings();
+    try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch (e) {}
+}
+
 // Apply current settings to UI
 function applySettings() {
+    const body = document.body;
+    const design = settings.dashboardDesign === 'original' ? 'original' : 'glass';
+    const glassOption = document.getElementById('design-glass');
+    const originalOption = document.getElementById('design-original');
+    let originalStyles = document.getElementById('original-design-css');
+
+    body.classList.toggle('dashboard-glass', design === 'glass');
+    body.classList.toggle('dashboard-original', design === 'original');
+
+    if (glassOption) glassOption.classList.toggle('active', design === 'glass');
+    if (originalOption) originalOption.classList.toggle('active', design === 'original');
+
+    if (design === 'original') {
+        if (!originalStyles) {
+            originalStyles = document.createElement('link');
+            originalStyles.id = 'original-design-css';
+            originalStyles.rel = 'stylesheet';
+            originalStyles.href = 'styles-original.css?v=glass-home-v7';
+            document.head.appendChild(originalStyles);
+        }
+    } else if (originalStyles) {
+        originalStyles.remove();
+    }
+
     // Lyrics toggle
     const lyricsToggle = document.getElementById('toggle-lyrics');
     const lyricsContainer = document.getElementById('lyrics-container');
@@ -101,7 +134,6 @@ function applySettings() {
     if (valueDisplay) valueDisplay.textContent = `${settings.backgroundDarkness}%`;
     
     // Player layout
-    const body = document.body;
     const classicOption = document.getElementById('layout-classic');
     const cinematicOption = document.getElementById('layout-cinematic');
     

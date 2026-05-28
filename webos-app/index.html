@@ -7,7 +7,7 @@
     <meta name="webOSAppType" content="web">
     <title>StandByMe Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=glass-home-v6">
+    <link rel="stylesheet" href="styles.css?v=glass-home-v7">
 </head>
 <body>
     <div class="background"></div>
@@ -27,6 +27,26 @@
     <div class="settings-modal" id="settings-modal">
         <div class="settings-panel">
             <div class="settings-title">Settings</div>
+
+            <div class="setting-item">
+                <span class="setting-label">Dashboard Design</span>
+                <div class="layout-selector">
+                    <div class="layout-option" id="design-glass" onclick="setDashboardDesign('glass')">
+                        <div class="layout-preview layout-preview-cinematic">
+                            <div class="lp-art-full"></div>
+                            <div class="lp-overlay"></div>
+                        </div>
+                        <span>Glass</span>
+                    </div>
+                    <div class="layout-option" id="design-original" onclick="setDashboardDesign('original')">
+                        <div class="layout-preview layout-preview-classic">
+                            <div class="lp-art"></div>
+                            <div class="lp-controls"></div>
+                        </div>
+                        <span>Original</span>
+                    </div>
+                </div>
+            </div>
             
             <div class="setting-item">
                 <span class="setting-label">Show Lyrics</span>
@@ -319,6 +339,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=glass-home-v6"></script>
+    <script src="app.js?v=glass-home-v7"></script>
 </body>
 </html>
