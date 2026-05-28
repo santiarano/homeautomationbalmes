@@ -2041,32 +2041,32 @@ html.ipad-shell .settings-btn {
 
 html.ipad-shell .weather-section {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
 }
 
 html.ipad-shell .wx-icon {
-    width: clamp(210px, 36vw, 290px);
-    margin-top: 0;
-}
-
-html.ipad-shell .temp {
-    font-size: clamp(58px, 9vw, 88px);
-    margin-top: -12px;
-}
-
-html.ipad-shell .condition {
-    font-size: clamp(15px, 2.6vw, 20px);
+    width: clamp(130px, 22vw, 180px);
     margin-top: 4px;
 }
 
+html.ipad-shell .temp {
+    font-size: clamp(44px, 6.6vw, 66px);
+    margin-top: -8px;
+}
+
+html.ipad-shell .condition {
+    font-size: clamp(13px, 2vw, 17px);
+    margin-top: 2px;
+}
+
 html.ipad-shell .temp-details {
-    font-size: clamp(14px, 2.6vw, 19px);
-    margin-top: 8px;
-    gap: 8px;
+    font-size: clamp(12px, 1.9vw, 16px);
+    margin-top: 6px;
+    gap: 7px;
 }
 
 html.ipad-shell .divider {
-    margin: 12px auto;
+    margin: 8px auto;
     width: min(84vw, 860px);
 }
 
@@ -2077,37 +2077,37 @@ html.ipad-shell .actions-carousel {
 
 html.ipad-shell .actions-track-wrapper,
 html.ipad-shell .divider + .actions-carousel .actions-track-wrapper {
-    padding: 24px 0 10px;
-    margin: -24px 0 -8px;
+    padding: 18px 0 8px;
+    margin: -18px 0 -6px;
     min-height: auto;
 }
 
 html.ipad-shell .button-grid {
-    column-gap: clamp(54px, 10vw, 92px);
-    row-gap: clamp(18px, 3vw, 30px);
+    column-gap: clamp(42px, 8vw, 76px);
+    row-gap: clamp(12px, 2.2vw, 22px);
     margin: 0;
-    padding: 8px 0;
+    padding: 6px 0;
 }
 
 html.ipad-shell .btn {
-    width: clamp(145px, 26vw, 190px);
-    height: clamp(145px, 26vw, 190px);
-    border-width: 4px;
+    width: clamp(112px, 20vw, 152px);
+    height: clamp(112px, 20vw, 152px);
+    border-width: 3.5px;
 }
 
 html.ipad-shell .btn::before {
-    inset: -12px;
+    inset: -9px;
 }
 
 html.ipad-shell .btn-icon,
 html.ipad-shell .btn-icon-svg {
-    width: clamp(48px, 8vw, 66px);
-    height: clamp(48px, 8vw, 66px);
+    width: clamp(38px, 6vw, 52px);
+    height: clamp(38px, 6vw, 52px);
 }
 
 html.ipad-shell .btn-label {
-    font-size: clamp(12px, 2vw, 16px);
-    letter-spacing: 0.12em;
+    font-size: clamp(10px, 1.55vw, 13px);
+    letter-spacing: 0.11em;
 }
 
 html.ipad-shell .actions-dots {
