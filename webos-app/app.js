@@ -117,7 +117,7 @@ function applySettings() {
             originalStyles = document.createElement('link');
             originalStyles.id = 'original-design-css';
             originalStyles.rel = 'stylesheet';
-            originalStyles.href = 'styles-original.css?v=glass-home-v8';
+            originalStyles.href = 'styles-original.css?v=weather-tune-v9';
             document.head.appendChild(originalStyles);
         }
     } else if (originalStyles) {

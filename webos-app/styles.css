@@ -3540,29 +3540,41 @@ body.playlist-style-icons .playlist-carousel-wrapper {
 }
 
 .wx-icon {
-    width: clamp(112px, 11vw, 160px);
-    height: clamp(112px, 11vw, 160px);
+    width: clamp(140px, 13.75vw, 200px);
+    height: clamp(140px, 13.75vw, 200px);
     align-self: center;
+    transform: translateY(100px);
+    position: relative;
+    z-index: 2;
 }
 
 .temp {
     align-self: end;
-    font-size: clamp(74px, 7.2vw, 104px);
+    font-size: clamp(93px, 9vw, 130px);
     line-height: 0.86;
+    transform: translateY(100px);
+    position: relative;
+    z-index: 2;
 }
 
 .condition {
     align-self: start;
     margin: clamp(8px, 0.9vh, 12px) 0 0 0;
     font-size: clamp(18px, 1.7vw, 24px);
+    transform: translateY(100px);
+    position: relative;
+    z-index: 2;
 }
 
 .temp-details {
     margin-top: 0;
     gap: clamp(14px, 1.8vw, 28px);
-    font-size: clamp(14px, 1.35vw, 18px);
+    font-size: clamp(18px, 1.7vw, 23px);
     color: rgba(255, 255, 255, 0.90);
     flex-wrap: wrap;
+    transform: translateY(-100px);
+    position: relative;
+    z-index: 3;
 }
 
 .actions-carousel {
@@ -3730,28 +3742,32 @@ body.playlist-style-icons .playlist-carousel-wrapper {
     }
 
     .wx-icon {
-        width: 96px;
-        height: 96px;
+        width: 120px;
+        height: 120px;
         align-self: center;
+        transform: translateY(100px);
     }
 
     .temp {
-        font-size: 64px;
+        font-size: 80px;
         line-height: 0.9;
         align-self: end;
+        transform: translateY(100px);
     }
 
     .condition {
         font-size: 17px;
         margin-top: 4px;
+        transform: translateY(100px);
     }
 
     .temp-details {
         width: 100%;
         justify-content: flex-start;
-        font-size: 15px;
+        font-size: 19px;
         gap: 12px;
         padding-top: 8px;
+        transform: translateY(-100px);
     }
 
     .actions-carousel {
