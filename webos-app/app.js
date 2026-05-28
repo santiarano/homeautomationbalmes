@@ -250,7 +250,7 @@ async function toggleShuffle() {
             },
             body: JSON.stringify({ 
                 entity_id: activeMediaSource,
-                shuffle: !(sonosState?.attributes?.shuffle || false)
+                shuffle: !(sonosState && sonosState.attributes && sonosState.attributes.shuffle || false)
             })
         });
         
@@ -665,7 +665,7 @@ async function updateMediaPlayer() {
         sonosState = sonosRes && sonosRes.ok ? await sonosRes.json() : null;
         appletvState = appletvRes && appletvRes.ok ? await appletvRes.json() : null;
         
-        console.log('Sonos state:', sonosState?.state, 'AppleTV state:', appletvState?.state);
+        console.log('Sonos state:', sonosState && sonosState.state, 'AppleTV state:', appletvState && appletvState.state);
         
         const activeStates = ['playing', 'paused', 'buffering'];
         
@@ -855,7 +855,7 @@ async function setVolume(percent) {
 // Adjust volume (increment/decrement)
 async function adjustVolume(delta) {
     try {
-        let currentVol = sonosState?.attributes?.volume_level || 0;
+        let currentVol = sonosState && sonosState.attributes && sonosState.attributes.volume_level || 0;
         let newVol = Math.min(1, Math.max(0, currentVol + delta));
 
         console.log(`Volume: ${Math.round(currentVol * 100)}% -> ${Math.round(newVol * 100)}%`);
