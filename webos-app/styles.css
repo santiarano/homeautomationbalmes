@@ -2404,8 +2404,8 @@ body.layout-cinematic .lyrics-container {
    GLASS HOME DESIGN
    ============================================ */
 :root {
-    --panel-width: min(86vw, 920px);
-    --panel-top: max(28px, env(safe-area-inset-top));
+    --panel-width: 100vw;
+    --panel-top: 0px;
     --glass-strong: rgba(7, 13, 24, 0.78);
     --glass-soft: rgba(18, 30, 48, 0.56);
     --glass-line: rgba(255, 255, 255, 0.12);
@@ -2420,21 +2420,11 @@ body {
 }
 
 body {
-    background:
-        radial-gradient(circle at 25% 0%, rgba(120, 160, 255, 0.18), transparent 28%),
-        radial-gradient(circle at 82% 16%, rgba(230, 190, 138, 0.12), transparent 30%),
-        #030610;
+    background: #030610;
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: url("assets/home-night-v2.png") center center / cover no-repeat;
-    opacity: 0.32;
-    filter: saturate(0.95) brightness(0.8);
-    z-index: 0;
-    pointer-events: none;
+    display: none;
 }
 
 .background {
@@ -2446,17 +2436,18 @@ body::before {
 }
 
 .container {
-    width: var(--panel-width);
-    height: calc(100dvh - (var(--panel-top) * 2));
-    max-height: 1780px;
-    margin: var(--panel-top) auto;
-    padding: clamp(22px, 3.2vh, 44px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: clamp(22px, 3vw, 38px);
+    width: 100vw;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: clamp(26px, 4vh, 58px) clamp(30px, 4.8vw, 76px);
+    border: 0;
+    border-radius: 0;
     background:
-        linear-gradient(155deg, rgba(8, 16, 31, 0.91), rgba(4, 9, 19, 0.94)),
-        radial-gradient(circle at 70% 12%, rgba(230, 190, 138, 0.12), transparent 34%);
-    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        radial-gradient(circle at 80% 18%, rgba(64, 88, 146, 0.16), transparent 34%),
+        radial-gradient(circle at 10% 84%, rgba(193, 124, 255, 0.08), transparent 30%),
+        linear-gradient(155deg, #07101f 0%, #030712 58%, #02040b 100%);
+    box-shadow: none;
     overflow: hidden;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -2476,12 +2467,12 @@ body::before {
         radial-gradient(circle at 18% 12%, rgba(117, 231, 226, 0.09), transparent 26%),
         radial-gradient(circle at 80% 60%, rgba(193, 124, 255, 0.08), transparent 30%);
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
 }
 
 .top-right {
-    top: calc(var(--panel-top) + clamp(24px, 3.5vh, 52px));
-    right: calc((100vw - var(--panel-width)) / 2 + clamp(28px, 4vw, 56px));
+    top: clamp(24px, 4vh, 56px);
+    right: clamp(30px, 4.8vw, 76px);
     z-index: 20;
 }
 
@@ -2522,9 +2513,9 @@ body::before {
 }
 
 .player-middle-row {
-    min-height: clamp(92px, 12vh, 142px);
+    min-height: clamp(108px, 13vh, 160px);
     padding: 0;
-    gap: clamp(14px, 2vw, 28px);
+    gap: clamp(18px, 2.4vw, 34px);
 }
 
 .player-left {
@@ -2534,8 +2525,8 @@ body::before {
 }
 
 .mini-album-art {
-    width: clamp(70px, 10vw, 108px);
-    height: clamp(70px, 10vw, 108px);
+    width: clamp(82px, 8.8vw, 122px);
+    height: clamp(82px, 8.8vw, 122px);
     margin-top: 0;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.08);
@@ -2559,12 +2550,12 @@ body::before {
 }
 
 .track-info {
-    padding-top: clamp(22px, 3.2vh, 34px);
+    padding-top: clamp(22px, 3vh, 32px);
 }
 
 .track-title {
-    max-width: min(46vw, 430px);
-    font-size: clamp(20px, 3vw, 34px);
+    max-width: min(38vw, 460px);
+    font-size: clamp(24px, 2.6vw, 38px);
     font-weight: 400;
     margin-bottom: 0.15em;
 }
@@ -2572,7 +2563,7 @@ body::before {
 .album-name,
 .artist-name,
 .playlist-name {
-    max-width: min(42vw, 390px);
+    max-width: min(35vw, 420px);
     font-size: clamp(12px, 1.6vw, 18px);
     color: rgba(255, 255, 255, 0.62);
 }
@@ -2759,10 +2750,10 @@ body.layout-cinematic .player-content {
 
 .weather-section {
     position: relative;
-    min-height: clamp(210px, 23vh, 330px);
+    min-height: clamp(280px, 32vh, 440px);
     margin: 0;
-    padding: clamp(22px, 3vh, 38px);
-    border-radius: clamp(22px, 3vw, 34px);
+    padding: clamp(28px, 4vh, 56px);
+    border-radius: clamp(18px, 2.2vw, 30px);
     overflow: hidden;
     display: grid;
     grid-template-columns: auto 1fr;
@@ -2770,9 +2761,9 @@ body.layout-cinematic .player-content {
         "icon temp"
         "icon condition"
         "details details";
-    align-items: center;
+    align-items: start;
     justify-content: flex-start;
-    column-gap: clamp(20px, 3vw, 42px);
+    column-gap: clamp(28px, 3.8vw, 58px);
     color: white;
     background:
         linear-gradient(90deg, rgba(5, 10, 22, 0.78), rgba(5, 10, 22, 0.38) 46%, rgba(5, 10, 22, 0.18)),
@@ -2799,32 +2790,51 @@ body.layout-cinematic .player-content {
 
 .wx-icon {
     grid-area: icon;
-    width: clamp(92px, 12vw, 150px);
+    width: clamp(118px, 12vw, 190px);
+    height: clamp(118px, 12vw, 190px);
     margin: 0;
     filter: drop-shadow(0 0 18px rgba(230, 190, 138, 0.28));
 }
 
 .temp {
     grid-area: temp;
-    font-size: clamp(58px, 8vw, 108px);
-    line-height: 0.9;
+    align-self: end;
+    justify-self: start;
+    font-size: clamp(76px, 7.4vw, 126px);
+    line-height: 0.82;
     margin: 0;
     color: rgba(255, 235, 205, 0.96);
 }
 
 .condition {
     grid-area: condition;
-    font-size: clamp(15px, 1.8vw, 24px);
-    margin: 0;
+    align-self: start;
+    justify-self: start;
+    font-size: clamp(18px, 1.7vw, 28px);
+    margin: clamp(8px, 1vh, 14px) 0 0 0;
+    color: rgba(255, 255, 255, 0.86);
 }
 
 .temp-details {
     grid-area: details;
     justify-content: flex-start;
-    margin-top: clamp(18px, 3vh, 42px);
-    gap: clamp(12px, 2vw, 28px);
-    font-size: clamp(12px, 1.4vw, 18px);
-    color: rgba(255, 255, 255, 0.62);
+    margin-top: clamp(24px, 3.4vh, 48px);
+    gap: clamp(16px, 2.4vw, 36px);
+    font-size: clamp(16px, 1.55vw, 24px);
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 400;
+}
+
+.temp-detail-label {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.temp-detail-value {
+    color: #ffffff;
+}
+
+.temp-detail-separator {
+    color: rgba(255, 255, 255, 0.58);
 }
 
 .actions-carousel {
@@ -2866,7 +2876,7 @@ body.layout-cinematic .player-content {
 
 .btn {
     width: auto;
-    height: clamp(132px, 15vh, 190px);
+    height: clamp(150px, 17vh, 210px);
     min-width: 0;
     border-radius: clamp(18px, 2.5vw, 28px);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -2914,22 +2924,25 @@ body.layout-cinematic .player-content {
 }
 
 .btn-inner {
+    width: 100%;
+    box-sizing: border-box;
     height: 100%;
     display: grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: 1fr auto auto;
-    gap: 2px 12px;
+    gap: clamp(4px, 0.6vh, 8px) clamp(12px, 1.6vw, 18px);
     align-items: end;
     justify-items: start;
-    padding: clamp(18px, 2.4vw, 28px);
+    text-align: left;
+    padding: clamp(22px, 2.6vw, 34px);
 }
 
 .btn-icon {
     grid-column: 1;
     grid-row: 1;
     align-self: start;
-    width: clamp(42px, 5.5vw, 70px);
-    height: clamp(42px, 5.5vw, 70px);
+    width: clamp(52px, 5vw, 78px);
+    height: clamp(52px, 5vw, 78px);
     filter: none;
     opacity: 0.92;
 }
@@ -2937,7 +2950,7 @@ body.layout-cinematic .player-content {
 .btn-label {
     grid-column: 1;
     grid-row: 2;
-    font-size: clamp(18px, 2.2vw, 28px);
+    font-size: clamp(22px, 2vw, 32px);
     line-height: 1.08;
     letter-spacing: 0;
     text-transform: none;
@@ -2953,8 +2966,8 @@ body.layout-cinematic .player-content {
 .btn-subtitle {
     grid-column: 1;
     grid-row: 3;
-    font-size: clamp(11px, 1.3vw, 16px);
-    color: rgba(255, 255, 255, 0.48);
+    font-size: clamp(13px, 1.2vw, 18px);
+    color: rgba(255, 255, 255, 0.56);
 }
 
 .btn-arrow {
@@ -2962,15 +2975,24 @@ body.layout-cinematic .player-content {
     grid-row: 1 / 4;
     align-self: end;
     justify-self: end;
-    width: clamp(34px, 4vw, 48px);
-    height: clamp(34px, 4vw, 48px);
+    width: clamp(42px, 4vw, 58px);
+    height: clamp(42px, 4vw, 58px);
     border-radius: 999px;
     display: grid;
     place-items: center;
-    color: rgba(255, 255, 255, 0.84);
-    background: rgba(255, 255, 255, 0.055);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: clamp(18px, 2.2vw, 26px);
+    color: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    font-size: 0;
+}
+
+.btn-arrow::before {
+    content: "";
+    width: 42%;
+    height: 42%;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: rotate(45deg) translate(-8%, 8%);
 }
 
 .voice-panel {
