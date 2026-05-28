@@ -3279,3 +3279,541 @@ body.layout-cinematic .player-content {
         min-height: clamp(142px, 8.6vh, 174px);
     }
 }
+
+/* ============================================
+   GLASS HOME DESIGN LOCK
+   The proposal is a portrait tablet surface: tight player,
+   slim chips, weather hero, scenes, and voice footer.
+   ============================================ */
+:root {
+    --app-pad-x: clamp(34px, 5vw, 72px);
+    --app-pad-y: clamp(28px, 3.8vh, 54px);
+    --app-gap: clamp(18px, 2vh, 28px);
+    --app-width: min(100vw, 980px);
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background: #02050d;
+}
+
+body {
+    background:
+        radial-gradient(circle at 70% 8%, rgba(74, 103, 172, 0.16), transparent 36%),
+        linear-gradient(150deg, #071120 0%, #030711 52%, #02040a 100%);
+}
+
+body::before,
+.background,
+.dark-overlay {
+    display: none !important;
+}
+
+.container,
+body.playlist-style-icons .container {
+    width: 100vw;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: var(--app-pad-y) max(var(--app-pad-x), calc((100vw - var(--app-width)) / 2 + var(--app-pad-x)));
+    border: 0;
+    border-radius: 0;
+    background:
+        radial-gradient(circle at 12% 12%, rgba(117, 231, 226, 0.08), transparent 28%),
+        radial-gradient(circle at 88% 68%, rgba(193, 124, 255, 0.07), transparent 28%);
+    box-shadow: none;
+    display: grid;
+    grid-template-areas:
+        "player"
+        "chips"
+        "main"
+        "voice";
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    gap: var(--app-gap);
+    overflow: hidden;
+}
+
+.container::before {
+    display: none;
+}
+
+.music-player {
+    grid-area: player;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    min-height: clamp(116px, 8.5vh, 150px);
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.player-content,
+.footer-carousel,
+.footer-track,
+.footer-page,
+.footer-page-main {
+    height: 100%;
+    min-height: inherit;
+}
+
+.player-middle-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) auto minmax(126px, 0.52fr);
+    align-items: center;
+    gap: clamp(18px, 2.3vw, 34px);
+    min-height: inherit;
+    padding: 0;
+}
+
+.player-left {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2vw, 24px);
+    min-width: 0;
+}
+
+.mini-album-art {
+    width: clamp(78px, 8.8vw, 112px);
+    height: clamp(78px, 8.8vw, 112px);
+    border-radius: clamp(16px, 1.8vw, 22px);
+    background: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.30);
+}
+
+.mini-album-art::after {
+    left: calc(100% + clamp(16px, 2vw, 24px));
+    top: 8px;
+    font-size: clamp(9px, 1vw, 12px);
+    color: rgba(255, 255, 255, 0.44);
+}
+
+.track-info {
+    padding-top: clamp(24px, 2.6vh, 34px);
+    gap: 3px;
+}
+
+.track-title {
+    max-width: min(36vw, 360px);
+    font-size: clamp(24px, 2.8vw, 34px);
+    line-height: 1.08;
+    color: rgba(255, 255, 255, 0.94);
+}
+
+.album-name,
+.artist-name,
+.playlist-name {
+    max-width: min(34vw, 340px);
+    font-size: clamp(13px, 1.45vw, 17px);
+    color: rgba(255, 255, 255, 0.58);
+}
+
+.artist-name::after {
+    width: 42px;
+    height: 18px;
+    margin-top: 8px;
+    opacity: 0.65;
+}
+
+.playback-controls {
+    position: static;
+    transform: none;
+    gap: clamp(18px, 2.2vw, 30px);
+    justify-self: center;
+}
+
+.control-btn {
+    width: clamp(44px, 5vw, 60px);
+    height: clamp(44px, 5vw, 60px);
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.play-pause-btn {
+    width: clamp(66px, 7vw, 88px);
+    height: clamp(66px, 7vw, 88px);
+}
+
+.volume-bar-container {
+    justify-self: end;
+    margin: 0;
+    padding: 0;
+    gap: 12px;
+}
+
+.volume-icon {
+    width: clamp(18px, 1.9vw, 22px);
+    height: clamp(18px, 1.9vw, 22px);
+}
+
+.volume-slider-wrap {
+    width: clamp(96px, 11vw, 140px);
+}
+
+.top-right {
+    top: var(--app-pad-y);
+    right: max(var(--app-pad-x), calc((100vw - var(--app-width)) / 2 + var(--app-pad-x)));
+}
+
+.clock {
+    font-size: clamp(15px, 1.55vw, 22px);
+}
+
+.playlist-carousel-wrapper,
+body.playlist-style-icons .playlist-carousel-wrapper {
+    grid-area: chips;
+    display: grid !important;
+    height: clamp(50px, 5.2vh, 66px);
+    width: 100%;
+    position: relative;
+    inset: auto;
+    overflow: hidden;
+}
+
+.playlist-carousel {
+    height: 100%;
+    display: flex;
+    gap: clamp(12px, 1.4vw, 18px);
+    align-items: stretch;
+    padding: 0;
+}
+
+.playlist-tile {
+    min-width: clamp(132px, 15vw, 180px);
+    height: 100%;
+    padding: 0 clamp(14px, 1.6vw, 20px);
+    border-radius: clamp(14px, 1.5vw, 18px);
+    justify-content: flex-start;
+}
+
+.playlist-tile-art {
+    width: clamp(30px, 3.5vw, 42px);
+    height: clamp(30px, 3.5vw, 42px);
+}
+
+.playlist-tile-title {
+    font-size: clamp(11px, 1.2vw, 15px);
+}
+
+.main-content {
+    grid-area: main;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: clamp(360px, 31vh, 500px) auto;
+    gap: var(--app-gap);
+    align-content: start;
+}
+
+.weather-section {
+    min-height: 0;
+    height: 100%;
+    margin: 0;
+    padding: clamp(30px, 3.7vw, 48px);
+    border-radius: clamp(24px, 3vw, 34px);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+        "icon temp"
+        "icon condition"
+        ". ."
+        "details details";
+    column-gap: clamp(28px, 3vw, 42px);
+    align-items: start;
+    background:
+        linear-gradient(90deg, rgba(5, 11, 24, 0.82) 0%, rgba(5, 11, 24, 0.55) 38%, rgba(5, 11, 24, 0.20) 76%),
+        url("assets/home-night-v2.png") 70% center / cover no-repeat;
+    border: 1px solid rgba(255, 255, 255, 0.115);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.weather-section::before {
+    background:
+        linear-gradient(180deg, rgba(4, 9, 20, 0.03), rgba(4, 9, 20, 0.62)),
+        radial-gradient(circle at 28% 30%, rgba(255, 210, 148, 0.08), transparent 28%);
+}
+
+.wx-icon {
+    width: clamp(112px, 11vw, 160px);
+    height: clamp(112px, 11vw, 160px);
+    align-self: center;
+}
+
+.temp {
+    align-self: end;
+    font-size: clamp(74px, 7.2vw, 104px);
+    line-height: 0.86;
+}
+
+.condition {
+    align-self: start;
+    margin: clamp(8px, 0.9vh, 12px) 0 0 0;
+    font-size: clamp(18px, 1.7vw, 24px);
+}
+
+.temp-details {
+    margin-top: 0;
+    gap: clamp(14px, 1.8vw, 28px);
+    font-size: clamp(14px, 1.35vw, 18px);
+    color: rgba(255, 255, 255, 0.90);
+    flex-wrap: wrap;
+}
+
+.actions-carousel {
+    min-height: 0;
+    height: auto;
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: clamp(14px, 1.7vh, 22px);
+}
+
+.actions-carousel::before {
+    content: "Scenes";
+    color: rgba(255, 255, 255, 0.78);
+    font-size: clamp(17px, 1.65vw, 22px);
+    font-weight: 400;
+}
+
+.actions-track-wrapper,
+.actions-track,
+.actions-page,
+.actions-page-main {
+    min-height: 0;
+    height: 100%;
+}
+
+.button-grid {
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+}
+
+.btn {
+    height: clamp(154px, 9.8vh, 188px);
+    min-height: 0;
+    border-radius: clamp(20px, 2.4vw, 28px);
+}
+
+.btn-inner {
+    padding: clamp(24px, 2.7vw, 34px);
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 1fr auto auto;
+    gap: 5px clamp(12px, 1.4vw, 18px);
+}
+
+.btn-icon {
+    width: clamp(54px, 5vw, 72px);
+    height: clamp(54px, 5vw, 72px);
+    align-self: start;
+}
+
+.btn-label {
+    font-size: clamp(21px, 2vw, 28px);
+    line-height: 1.08;
+}
+
+.btn-subtitle {
+    font-size: clamp(12px, 1.15vw, 16px);
+}
+
+.btn-arrow {
+    width: clamp(42px, 3.8vw, 54px);
+    height: clamp(42px, 3.8vw, 54px);
+    align-self: end;
+    opacity: 0.78;
+}
+
+.voice-panel {
+    grid-area: voice;
+    min-height: clamp(112px, 8vh, 150px);
+    padding: clamp(18px, 2.2vw, 26px);
+    border-radius: clamp(24px, 3vw, 34px);
+    gap: clamp(20px, 2.4vw, 30px);
+}
+
+.voice-orb {
+    width: clamp(76px, 7vw, 96px);
+    height: clamp(76px, 7vw, 96px);
+}
+
+.voice-title {
+    font-size: clamp(20px, 2vw, 27px);
+}
+
+@media (orientation: portrait) and (max-height: 1500px) {
+    :root {
+        --app-pad-x: clamp(28px, 4.2vw, 44px);
+        --app-pad-y: clamp(28px, 3.2vh, 44px);
+        --app-gap: clamp(14px, 1.5vh, 20px);
+    }
+
+    .music-player {
+        min-height: clamp(110px, 9vh, 132px);
+    }
+
+    .player-middle-row {
+        grid-template-columns: minmax(0, 1fr) auto minmax(102px, 0.38fr);
+        gap: clamp(14px, 2vw, 22px);
+    }
+
+    .mini-album-art {
+        width: clamp(74px, 9vw, 94px);
+        height: clamp(74px, 9vw, 94px);
+    }
+
+    .track-title {
+        font-size: clamp(22px, 2.6vw, 29px);
+        max-width: 270px;
+    }
+
+    .album-name,
+    .artist-name,
+    .playlist-name {
+        max-width: 260px;
+        font-size: clamp(12px, 1.4vw, 15px);
+    }
+
+    .control-btn {
+        width: 46px;
+        height: 46px;
+    }
+
+    .play-pause-btn {
+        width: 70px;
+        height: 70px;
+    }
+
+    .volume-slider-wrap {
+        width: 92px;
+    }
+
+    .playlist-carousel-wrapper,
+    body.playlist-style-icons .playlist-carousel-wrapper {
+        height: 54px;
+    }
+
+    .playlist-tile {
+        min-width: 128px;
+    }
+
+    .main-content {
+        grid-template-rows: clamp(320px, 30vh, 420px) auto;
+    }
+
+    .weather-section {
+        padding: 28px;
+    }
+
+    .wx-icon {
+        width: 122px;
+        height: 122px;
+    }
+
+    .temp {
+        font-size: 82px;
+    }
+
+    .temp-details {
+        font-size: 15px;
+    }
+
+    .button-grid {
+        gap: 16px;
+    }
+
+    .btn-inner {
+        padding: 24px 26px;
+    }
+
+    .btn-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .btn-label {
+        font-size: 22px;
+    }
+
+    .voice-panel {
+        min-height: 120px;
+    }
+}
+
+@media (orientation: landscape) {
+    :root {
+        --app-width: min(92vw, 1280px);
+        --app-pad-x: clamp(26px, 3.4vw, 54px);
+        --app-pad-y: clamp(22px, 3vh, 40px);
+        --app-gap: clamp(12px, 1.6vh, 20px);
+    }
+
+    .container,
+    body.playlist-style-icons .container {
+        grid-template-areas:
+            "player player"
+            "chips chips"
+            "main main"
+            "voice voice";
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        justify-content: center;
+    }
+
+    .music-player {
+        min-height: clamp(96px, 12vh, 126px);
+    }
+
+    .main-content {
+        grid-template-columns: 0.9fr 1.1fr;
+        grid-template-rows: minmax(0, 1fr);
+        align-items: stretch;
+        gap: var(--app-gap);
+    }
+
+    .weather-section {
+        min-height: 0;
+        height: 100%;
+    }
+
+    .actions-carousel {
+        height: 100%;
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .actions-track-wrapper,
+    .actions-track,
+    .actions-page,
+    .actions-page-main {
+        height: 100%;
+    }
+
+    .button-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        height: 100%;
+    }
+
+    .btn {
+        height: 100%;
+    }
+
+    .voice-panel {
+        min-height: clamp(88px, 11vh, 116px);
+    }
+}
+
+@media (orientation: portrait) and (min-height: 1500px) {
+    .weather-section {
+        height: clamp(500px, 27vh, 540px);
+    }
+
+    .btn {
+        height: clamp(208px, 11.6vh, 238px);
+    }
+}
