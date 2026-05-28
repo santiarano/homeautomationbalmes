@@ -86,6 +86,18 @@ function setDashboardDesign(design) {
     } catch (e) {}
 }
 
+function requestPortraitOrientation() {
+    if (typeof webOSSystem === 'undefined' || !webOSSystem.setWindowOrientation) {
+        return;
+    }
+
+    try {
+        webOSSystem.setWindowOrientation('portrait');
+    } catch (e) {
+        console.log('Could not request portrait orientation:', e);
+    }
+}
+
 // Apply current settings to UI
 function applySettings() {
     const body = document.body;
@@ -105,7 +117,7 @@ function applySettings() {
             originalStyles = document.createElement('link');
             originalStyles.id = 'original-design-css';
             originalStyles.rel = 'stylesheet';
-            originalStyles.href = 'styles-original.css?v=glass-home-v7';
+            originalStyles.href = 'styles-original.css?v=glass-home-v8';
             document.head.appendChild(originalStyles);
         }
     } else if (originalStyles) {
@@ -1588,6 +1600,7 @@ function detectCurrentPlaylist() {
 
 function handleOrientationChange(orientation) {
     console.log('Screen orientation changed to:', orientation);
+    requestPortraitOrientation();
     document.body.style.display = 'none';
     document.body.offsetHeight;
     document.body.style.display = '';
@@ -1602,11 +1615,13 @@ window.addEventListener('resize', function() {
 });
 
 document.addEventListener('focus', function() {
+    requestPortraitOrientation();
     applySettings();
 });
 
 document.addEventListener('visibilitychange', function() {
     if (!document.hidden) {
+        requestPortraitOrientation();
         applySettings();
     }
 });
@@ -1842,6 +1857,8 @@ document.addEventListener('contextmenu', function(e) {
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof webOSSystem !== 'undefined') {
         console.log('Running on webOS');
+        requestPortraitOrientation();
+        setTimeout(requestPortraitOrientation, 350);
         
         try {
             if (webOSSystem.setInputMethod) {
@@ -1863,6 +1880,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('load', function() {
         if (typeof webOSSystem !== 'undefined') {
+            requestPortraitOrientation();
+            setTimeout(requestPortraitOrientation, 350);
             try {
                 if (webOSSystem.setInputMethod) {
                     webOSSystem.setInputMethod('none');

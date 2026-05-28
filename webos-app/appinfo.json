@@ -1,6 +1,6 @@
 {
     "id": "com.standbyme.dashboard",
-    "version": "1.3.6",
+    "version": "1.3.7",
     "vendor": "StandByMe Home",
     "type": "web",
     "main": "index.html",
@@ -10,9 +10,9 @@
     "bgColor": "#000000",
     "disableBackHistoryAPI": true,
     "transparent": false,
-    "requiredScreenRotation": "free",
+    "requiredScreenRotation": "portrait",
     "supportPortraitMode": true,
-    "supportAutoOrientation": true,
+    "supportAutoOrientation": false,
     "supportTouchMode": "full",
     "noSplashOnLaunch": true,
     "handlesRemoteKeyEvent": false

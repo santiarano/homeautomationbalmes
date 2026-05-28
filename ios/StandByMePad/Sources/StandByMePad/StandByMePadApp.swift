@@ -13,7 +13,7 @@ struct StandByMePadApp: App {
 }
 
 struct DashboardWebView: UIViewRepresentable {
-    private let dashboardURL = URL(string: "http://192.168.1.43:8123/local/standbyme-app/index.html?v=glass-home-v7")!
+    private let dashboardURL = URL(string: "http://192.168.1.43:8123/local/standbyme-app/index.html?v=glass-home-v8")!
 
     func makeUIView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
