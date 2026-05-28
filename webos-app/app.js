@@ -1556,9 +1556,6 @@ function detectCurrentPlaylist() {
 
 function handleOrientationChange(orientation) {
     console.log('Screen orientation changed to:', orientation);
-    if (typeof webOSSystem !== 'undefined') {
-        webOSSystem.setWindowOrientation(orientation);
-    }
     document.body.style.display = 'none';
     document.body.offsetHeight;
     document.body.style.display = '';
@@ -1573,17 +1570,12 @@ window.addEventListener('resize', function() {
 });
 
 document.addEventListener('focus', function() {
-    if (typeof webOSSystem !== 'undefined' && webOSSystem.screenOrientation) {
-        webOSSystem.setWindowOrientation(webOSSystem.screenOrientation);
-    }
+    applySettings();
 });
 
 document.addEventListener('visibilitychange', function() {
     if (!document.hidden) {
         applySettings();
-        if (typeof webOSSystem !== 'undefined') {
-            webOSSystem.setWindowOrientation(webOSSystem.screenOrientation);
-        }
     }
 });
 
@@ -1817,8 +1809,7 @@ document.addEventListener('contextmenu', function(e) {
 
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof webOSSystem !== 'undefined') {
-        console.log('Running on webOS, setting up rotation support');
-        webOSSystem.setWindowOrientation(webOSSystem.screenOrientation);
+        console.log('Running on webOS');
         
         try {
             if (webOSSystem.setInputMethod) {

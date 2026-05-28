@@ -3649,27 +3649,35 @@ body.playlist-style-icons .playlist-carousel-wrapper {
 
 @media (orientation: portrait) and (max-height: 1500px) {
     :root {
-        --app-pad-x: clamp(28px, 4.2vw, 44px);
-        --app-pad-y: clamp(28px, 3.2vh, 44px);
-        --app-gap: clamp(14px, 1.5vh, 20px);
+        --app-pad-x: clamp(26px, 4vw, 42px);
+        --app-pad-y: clamp(22px, 2.4vh, 32px);
+        --app-gap: clamp(10px, 1.1vh, 14px);
+        --app-width: min(100vw, 980px);
+    }
+
+    .container,
+    body.playlist-style-icons .container {
+        grid-template-rows: 108px 50px minmax(0, 1fr) 118px;
+        padding-bottom: calc(var(--app-pad-y) + env(safe-area-inset-bottom, 0px));
     }
 
     .music-player {
-        min-height: clamp(110px, 9vh, 132px);
+        min-height: 108px;
+        height: 108px;
     }
 
     .player-middle-row {
-        grid-template-columns: minmax(0, 1fr) auto minmax(102px, 0.38fr);
-        gap: clamp(14px, 2vw, 22px);
+        grid-template-columns: minmax(0, 1fr) auto minmax(86px, 0.32fr);
+        gap: clamp(10px, 1.5vw, 16px);
     }
 
     .mini-album-art {
-        width: clamp(74px, 9vw, 94px);
-        height: clamp(74px, 9vw, 94px);
+        width: 76px;
+        height: 76px;
     }
 
     .track-title {
-        font-size: clamp(22px, 2.6vw, 29px);
+        font-size: clamp(20px, 2.35vw, 26px);
         max-width: 270px;
     }
 
@@ -3681,13 +3689,13 @@ body.playlist-style-icons .playlist-carousel-wrapper {
     }
 
     .control-btn {
-        width: 46px;
-        height: 46px;
+        width: 40px;
+        height: 40px;
     }
 
     .play-pause-btn {
-        width: 70px;
-        height: 70px;
+        width: 58px;
+        height: 58px;
     }
 
     .volume-slider-wrap {
@@ -3696,53 +3704,126 @@ body.playlist-style-icons .playlist-carousel-wrapper {
 
     .playlist-carousel-wrapper,
     body.playlist-style-icons .playlist-carousel-wrapper {
-        height: 54px;
+        height: 50px;
     }
 
     .playlist-tile {
-        min-width: 128px;
+        min-width: 118px;
     }
 
     .main-content {
-        grid-template-rows: clamp(320px, 30vh, 420px) auto;
+        height: 100%;
+        grid-template-rows: clamp(252px, 22vh, 300px) minmax(0, 1fr);
+        gap: clamp(10px, 1.1vh, 14px);
     }
 
     .weather-section {
-        padding: 28px;
+        padding: 22px 24px 20px;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) auto auto;
+        grid-template-areas:
+            "icon temp"
+            "icon condition"
+            "details details";
+        column-gap: 28px;
+        align-items: center;
     }
 
     .wx-icon {
-        width: 122px;
-        height: 122px;
+        width: 96px;
+        height: 96px;
+        align-self: center;
     }
 
     .temp {
-        font-size: 82px;
+        font-size: 64px;
+        line-height: 0.9;
+        align-self: end;
+    }
+
+    .condition {
+        font-size: 17px;
+        margin-top: 4px;
     }
 
     .temp-details {
+        width: 100%;
+        justify-content: flex-start;
         font-size: 15px;
+        gap: 12px;
+        padding-top: 8px;
+    }
+
+    .actions-carousel {
+        height: 100%;
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .actions-track-wrapper,
+    .actions-track,
+    .actions-page,
+    .actions-page-main {
+        height: 100%;
+        overflow: hidden;
     }
 
     .button-grid {
+        height: 100%;
         gap: 16px;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+    }
+
+    .btn {
+        height: 100%;
+        min-height: 0;
     }
 
     .btn-inner {
-        padding: 24px 26px;
+        padding: 18px 22px;
     }
 
     .btn-icon {
-        width: 56px;
-        height: 56px;
+        width: 46px;
+        height: 46px;
     }
 
     .btn-label {
-        font-size: 22px;
+        font-size: 19px;
+    }
+
+    .btn-subtitle {
+        font-size: 12px;
+    }
+
+    .btn-arrow {
+        width: 42px;
+        height: 42px;
     }
 
     .voice-panel {
-        min-height: 120px;
+        min-height: 118px;
+        height: 118px;
+        padding: 16px 22px;
+        align-self: end;
+    }
+
+    .voice-orb {
+        width: 72px;
+        height: 72px;
+    }
+
+    .voice-title {
+        font-size: 20px;
+    }
+
+    .voice-prompts {
+        gap: 8px;
+    }
+
+    .voice-prompts span {
+        font-size: 11px;
+        padding: 8px 12px;
     }
 }
 
