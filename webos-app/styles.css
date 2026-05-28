@@ -2656,6 +2656,25 @@ body.playlist-style-icons .playlist-carousel-wrapper {
     display: grid !important;
 }
 
+body.playlist-style-icons .playlist-grid-wrapper,
+body.layout-cinematic .playlist-grid-wrapper {
+    display: none !important;
+}
+
+body.playlist-style-icons .container {
+    padding: clamp(22px, 3.2vh, 44px);
+}
+
+body.playlist-style-icons .wx-icon {
+    transform: none;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+body.playlist-style-icons .button-grid {
+    transform: none;
+}
+
 body.layout-cinematic .music-player {
     position: relative;
     inset: auto;
