@@ -7,7 +7,7 @@
     <meta name="webOSAppType" content="web">
     <title>StandByMe Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=ipad-layout-3">
+    <link rel="stylesheet" href="styles.css?v=glass-home-v1">
 </head>
 <body>
     <div class="background"></div>
@@ -124,7 +124,9 @@
                             <div class="btn btn--gold" onclick="triggerHA('script', 'screen_up_5')">
                                 <div class="btn-inner">
                                     <img class="btn-icon" src="Icons/open awning_gold.png" alt="Open Awning">
-                                    <div class="btn-label">Open<br>Awning</div>
+                                    <div class="btn-label">Open Awning</div>
+                                    <div class="btn-subtitle">Terrace shade</div>
+                                    <div class="btn-arrow">→</div>
                                 </div>
                             </div>
 
@@ -132,7 +134,9 @@
                             <div class="btn btn--silver" onclick="triggerHA('script', 'screen_down_2')">
                                 <div class="btn-inner">
                                     <img class="btn-icon" src="Icons/close awning_white.png" alt="Close Awning">
-                                    <div class="btn-label">Close<br>Awning</div>
+                                    <div class="btn-label">Close Awning</div>
+                                    <div class="btn-subtitle">Terrace shade</div>
+                                    <div class="btn-arrow">→</div>
                                 </div>
                             </div>
 
@@ -140,7 +144,9 @@
                             <div class="btn btn--gold" onclick="triggerHA('script', 'turn_tv_on')">
                                 <div class="btn-inner">
                                     <img class="btn-icon" src="Icons/movie_time.png" alt="Movie Time">
-                                    <div class="btn-label">Movie<br>Time</div>
+                                    <div class="btn-label">Movie Time</div>
+                                    <div class="btn-subtitle">Projector on</div>
+                                    <div class="btn-arrow">→</div>
                                 </div>
                             </div>
 
@@ -148,7 +154,9 @@
                             <div class="btn btn--silver" onclick="triggerHA('script', 'turn_tv_off')">
                                 <div class="btn-inner">
                                     <img class="btn-icon" src="Icons/end_show.png" alt="End Show">
-                                    <div class="btn-label">End<br>Show</div>
+                                    <div class="btn-label">End Show</div>
+                                    <div class="btn-subtitle">Projector off</div>
+                                    <div class="btn-arrow">→</div>
                                 </div>
                             </div>
                         </div>
@@ -292,8 +300,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="voice-panel" onclick="openSettings()">
+            <div class="voice-orb">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="voice-copy">
+                <div class="voice-title">Tap to talk to your home</div>
+                <div class="voice-prompts">
+                    <span>Dim lights</span>
+                    <span>Play something relaxing</span>
+                    <span>What's the weather?</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="app.js?v=ipad-layout-3"></script>
+    <script src="app.js?v=glass-home-v1"></script>
 </body>
 </html>

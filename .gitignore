@@ -34,3 +34,4 @@ __pycache__/
 *.png
 !webos-app/Icons/*.png
 !webos-app/*.png
+!webos-app/assets/*.png
