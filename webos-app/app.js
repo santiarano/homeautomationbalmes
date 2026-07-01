@@ -867,10 +867,68 @@ async function updateMediaPlayer() {
 
 const updateSonos = updateMediaPlayer;
 
+function normalizeVolumeLevel(value) {
+    if (typeof value === 'number') {
+        if (!Number.isFinite(value)) return null;
+        return Math.min(1, Math.max(0, value > 1 ? value / 100 : value));
+    }
+
+    if (typeof value !== 'string') return null;
+
+    const match = value.match(/-?\d+(?:\.\d+)?/);
+    if (!match) return null;
+
+    const numericValue = Number(match[0]);
+    if (!Number.isFinite(numericValue)) return null;
+
+    const isPercent = value.includes('%') || numericValue > 1;
+    return Math.min(1, Math.max(0, isPercent ? numericValue / 100 : numericValue));
+}
+
+function normalizeVolumeInput(value) {
+    if (typeof value === 'number') {
+        if (!Number.isFinite(value)) return null;
+        return Math.min(1, Math.max(0, Number.isInteger(value) ? value / 100 : value));
+    }
+
+    if (typeof value !== 'string') return null;
+
+    const match = value.match(/-?\d+(?:\.\d+)?/);
+    if (!match) return null;
+
+    const numericValue = Number(match[0]);
+    if (!Number.isFinite(numericValue)) return null;
+
+    const hasDecimal = match[0].includes('.');
+    const isFraction = hasDecimal && Math.abs(numericValue) <= 1 && !value.includes('%');
+    return Math.min(1, Math.max(0, isFraction ? numericValue : numericValue / 100));
+}
+
+function normalizeVolumeDelta(value) {
+    if (typeof value === 'number') {
+        if (!Number.isFinite(value)) return null;
+        return Math.abs(value) > 1 ? value / 100 : value;
+    }
+
+    if (typeof value !== 'string') return null;
+
+    const match = value.match(/-?\d+(?:\.\d+)?/);
+    if (!match) return null;
+
+    const numericValue = Number(match[0]);
+    if (!Number.isFinite(numericValue)) return null;
+
+    return value.includes('%') || Math.abs(numericValue) > 1 ? numericValue / 100 : numericValue;
+}
+
 // Set volume directly (from slider)
 async function setVolume(percent) {
     try {
-        let newVol = Math.min(100, Math.max(0, parseInt(percent))) / 100;
+        let newVol = normalizeVolumeInput(percent);
+        if (newVol === null) {
+            console.warn('Ignoring invalid volume value:', percent);
+            return;
+        }
 
         console.log(`Volume set to: ${Math.round(newVol * 100)}%`);
 
@@ -899,8 +957,14 @@ async function setVolume(percent) {
 // Adjust volume (increment/decrement)
 async function adjustVolume(delta) {
     try {
-        let currentVol = sonosState && sonosState.attributes && sonosState.attributes.volume_level || 0;
-        let newVol = Math.min(1, Math.max(0, currentVol + delta));
+        let currentVol = normalizeVolumeLevel(sonosState && sonosState.attributes && sonosState.attributes.volume_level);
+        let volumeDelta = normalizeVolumeDelta(delta);
+        if (currentVol === null || volumeDelta === null) {
+            console.warn('Ignoring volume adjustment with invalid values:', { currentVol, delta });
+            return;
+        }
+
+        let newVol = Math.min(1, Math.max(0, currentVol + volumeDelta));
 
         console.log(`Volume: ${Math.round(currentVol * 100)}% -> ${Math.round(newVol * 100)}%`);
 
